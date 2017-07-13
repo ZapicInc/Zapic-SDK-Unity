@@ -5,13 +5,13 @@ using ZapicSDK;
 
 public static class Zapic {
 
-	static ZapicBehavior zapicBehavior;
+	// static ZapicBehavior zapicBehavior;
 
 	static Zapic(){
 
-		// Set up a MonoBehaviour to run Zapi, and hide it
+		// Set up a MonoBehaviour to run Zapic, and hide it
         GameObject zapicGo = new GameObject();
-        zapicBehavior = (ZapicBehavior)zapicGo.AddComponent<ZapicBehavior>();
+        // zapicBehavior = (ZapicBehavior)zapicGo.AddComponent<ZapicBehavior>();
         zapicGo.name = "Zapic";
         // zapicGo.hideFlags = HideFlags.HideInHierarchy;
 	}
@@ -22,12 +22,12 @@ public static class Zapic {
 	}
 
 	public static void ShowMenu(){
-		zapicBehavior.ShowMenu();
+		// zapicBehavior.ShowMenu();
 		// Debug.Log("Show Zapic Menu");
 	}
 
 	public static void ShowMenu(Views view){
-		zapicBehavior.ShowMenu(view);
+		// zapicBehavior.ShowMenu(view);
 		// Debug.Log("Show Menu " + view);
 	}
 }
