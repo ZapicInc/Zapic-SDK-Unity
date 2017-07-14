@@ -5,6 +5,8 @@
 /[Bb]uilds/
 /Assets/AssetStoreTools*
 
+.DS_Store
+
 # Visual Studio 2015 cache directory
 /.vs/
 
@@ -32,3 +34,17 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+\.DS_Store
+
+Carthage/
+
+\.vscode/
+
+Assets/Plugins/iOS/
+
+Assets/Plugins/
+
+Assets/Plugins\.meta
+
+unity\.log
