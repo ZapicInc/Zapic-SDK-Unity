@@ -1,0 +1,19 @@
+language: objective-c
+osx_image: xcode8.3
+
+branches:
+  only:
+    - master
+    # Tags formatted vX.Y.Z*
+    # - /v\d+\.\d+\.\d+.*/
+
+# before_install:
+# - chmod a+x ./Scripts/install.sh
+# - chmod a+x ./Scripts/exportPackage.sh
+
+install:
+- sh ./Scripts/installUnity.sh
+- carthage bootstrap --no-use-binaries --platform iOS --cache-builds
+
+script:
+- ./Scripts/exportPackage.sh

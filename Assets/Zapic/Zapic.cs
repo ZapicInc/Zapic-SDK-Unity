@@ -1,33 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using ZapicSDK;
 
-public static class Zapic {
+public static class Zapic
+{
+    [DllImport("__Internal")]
+    private static extern void z_connect();
 
-	// static ZapicBehavior zapicBehavior;
+    /**
+    * Connect to Zapic
+    */
+    public static void Connect()
+    {
+        z_connect();
+    }
 
-	static Zapic(){
+    public static void ShowMenu()
+    {
+        Debug.LogError("Not supported yet");
+    }
 
-		// Set up a MonoBehaviour to run Zapic, and hide it
-        GameObject zapicGo = new GameObject();
-        // zapicBehavior = (ZapicBehavior)zapicGo.AddComponent<ZapicBehavior>();
-        zapicGo.name = "Zapic";
-        // zapicGo.hideFlags = HideFlags.HideInHierarchy;
-	}
-
-	public static void Init(){
-		//Check network connectivity
-		//Start login with gamecenter/play services
-	}
-
-	public static void ShowMenu(){
-		// zapicBehavior.ShowMenu();
-		// Debug.Log("Show Zapic Menu");
-	}
-
-	public static void ShowMenu(Views view){
-		// zapicBehavior.ShowMenu(view);
-		// Debug.Log("Show Menu " + view);
-	}
+    public static void ShowMenu(Views view)
+    {
+        Debug.LogError("Not supported yet");
+    }
 }
