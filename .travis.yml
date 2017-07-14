@@ -4,6 +4,7 @@ language: csharp
 branches:
   only:
   - master
+  - /v\d+\.\d+\.\d+.*/
 cache:
   directories:
   - Carthage
