@@ -1,5 +1,6 @@
-language: objective-c
-osx_image: xcode8.3
+# language: objective-c
+language: csharp
+# osx_image: xcode8.3
 branches:
   only:
   - master
@@ -7,13 +8,15 @@ cache:
   directories:
   - Carthage
 before_install:
-- chmod a+x ./Scripts/installUnity.sh
-- chmod a+x ./Scripts/exportPackage.sh
+# - chmod a+x ./Scripts/installUnity.sh
+# - chmod a+x ./Scripts/exportPackage.sh
 install:
-- sh ./Scripts/installUnity.sh
-- carthage bootstrap --no-use-binaries --platform iOS --cache-builds
+# - sh ./Scripts/installUnity.sh
+# - carthage bootstrap --no-use-binaries --platform iOS --cache-builds
 script:
-- ./Scripts/exportPackage.sh
+# - ./Scripts/exportPackage.sh
+  - touch Zapic.unitypackage
+  - echo "Hello World" >> Zapic.unitypackage
 deploy:
   provider: releases
   skip_cleanup: true
