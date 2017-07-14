@@ -32,8 +32,8 @@ echo "     Copying (iOS) dependencies     "
 echo "===================================="
 echo ""
 
-CARTHAGE_BUILD=../Carthage/Build/iOS
-iOS_PLUGIN=../Assets/Plugins/iOS
+CARTHAGE_BUILD=./Carthage/Build/iOS
+iOS_PLUGIN=./Assets/Plugins/iOS
 
 mkdir -p $iOS_PLUGIN
 
@@ -56,19 +56,7 @@ echo ""
         -quit \
         -nographics \
         -batchmode \
+        -projectPath $(pwd) \
         -silent-crashes \
         -logFile $(pwd)/unity.log \
-        -projectPath $(pwd)/../ \
-        -exportPackage Assets/Zapic Assets/Plugins  ZapicTest.unitypackage
-
-#zip -r archive_name.zip folder_to_compress
-
-
-#SCRIPT_DIR= pwd
-#echo $SCRIPT_DIR
-##BUILD_DIR= ../build
-#PROJ_DIR= $(cd ../; pwd)
-##echo $BUILD_DIR
-#echo $PROJ_DIR
-#
-#ls ../
+        -exportPackage Assets/Zapic Assets/Plugins  Zapic.unitypackage
