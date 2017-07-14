@@ -1,16 +1,17 @@
 # language: objective-c
-language: csharp
+language: ruby
 # osx_image: xcode8.3
 branches:
   only:
   - master
-cache:
-  directories:
-  - Carthage
-before_install:
+  - /v\d+\.\d+\.\d+.*/
+# cache:
+#   directories:
+#   - Carthage
+# before_install:
 # - chmod a+x ./Scripts/installUnity.sh
 # - chmod a+x ./Scripts/exportPackage.sh
-install:
+# install:
 # - sh ./Scripts/installUnity.sh
 # - carthage bootstrap --no-use-binaries --platform iOS --cache-builds
 script:
@@ -20,8 +21,7 @@ script:
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key:
-    secure: $GITHUB
+  api_key: $GITHUB 
   file: Zapic.unitypackage
   on:
     repo: ZapicInc/Zapic-SDK-Unity
