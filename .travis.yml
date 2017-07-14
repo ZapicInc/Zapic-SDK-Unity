@@ -1,23 +1,25 @@
 language: objective-c
 osx_image: xcode8.3
-
 branches:
   only:
-    - master
-    # Tags formatted vX.Y.Z*
-    # - /v\d+\.\d+\.\d+.*/
-
+  - master
+  - /v\d+\.\d+\.\d+.*/
 cache:
   directories:
-    - Carthage
-
+  - Carthage
 before_install:
 - chmod a+x ./Scripts/installUnity.sh
 - chmod a+x ./Scripts/exportPackage.sh
-
 install:
 - sh ./Scripts/installUnity.sh
 - carthage bootstrap --no-use-binaries --platform iOS --cache-builds
-
 script:
 - ./Scripts/exportPackage.sh
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key: $GITHUB 
+  file: Zapic.unitypackage
+  on:
+    repo: ZapicInc/Zapic-SDK-Unity
+    tags: true
