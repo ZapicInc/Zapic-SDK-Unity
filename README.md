@@ -1,5 +1,7 @@
 # Zapic-SDK-Unity
 
+[![Build Status](https://travis-ci.org/ZapicInc/Zapic-SDK-Unity.svg?branch=master)](https://travis-ci.org/ZapicInc/Zapic-SDK-Unity)
+
 This open-source library allows you to integrate Zapic into your Unity app.
 
 Learn more about about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developer.zapic.com
