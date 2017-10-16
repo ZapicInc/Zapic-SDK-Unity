@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExampleStartup : MonoBehaviour {
+public class ExampleStartup : MonoBehaviour
+{
+    void Start()
+    {
+        Zapic.Start("v0.1");
+    }
 
-	// Use this for initialization
-	void Start () {
-		Zapic.Connect();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var p = new Dictionary<string, object>()
+            {
+                {"SCORE",22},
+                {"PARAM2","abc"},
+                {"PARAM3",true}
+            };
+
+            Zapic.SubmitEvent(p);
+        }
+    }
 }

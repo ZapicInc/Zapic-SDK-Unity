@@ -1,29 +1,60 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using ZapicSDK;
 
+
 public static class Zapic
 {
-    [DllImport("__Internal")]
-    private static extern void z_connect();
+    private static readonly IZapicInterface _interface;
 
-    /**
-    * Connect to Zapic
-    */
-    public static void Connect()
+    static Zapic()
     {
-        z_connect();
+#if UNITY_EDITOR
+        _interface = new ZapicEditorInterface();
+#elif UNITY_IOS
+        _interface = new ZapiciOSInterface();
+#elif UNITY_ANDROID
+        throw new NotImplementedException("Android is not currently supported");
+#endif
     }
 
-    public static void ShowMenu()
+    /// <summary>
+    /// Starts zapic. This should be called
+    /// as soon as possible during app startup.
+    /// </summary>
+    /// <param name="version">App version id.</param>
+    public static void Start(string version)
     {
-        Debug.LogError("Not supported yet");
+        _interface.Start(version);
     }
 
-    public static void ShowMenu(Views view)
+    /// <summary>
+    /// Shows the given zapic window
+    /// </summary>
+    /// <param name="view">View to show.</param>
+    public static void Show(Views view)
     {
-        Debug.LogError("Not supported yet");
+        _interface.Show(view);
+    }
+
+    /// <summary>
+    /// Gets the current players unique id.
+    /// </summary>
+    /// <returns>The unique id.</returns>
+    public static Guid? PlayerId()
+    {
+        return _interface.PlayerId();
+    }
+
+    /// <summary>
+    /// Submit a new in-game event to zapic.
+    /// </summary>
+    /// /// <param name="param">Collection of parameter names and associate values (numeric, string, bool)</param>
+    public static void SubmitEvent(Dictionary<string, object> param)
+    {
+        _interface.SubmitEvent(param);
     }
 }

@@ -18,7 +18,6 @@ public class ZapicButton : MonoBehaviour {
 	}
 
 	private void ShowZapicMenu(){
-		// Debug.Log("Show Zapic Menu");
-		Zapic.ShowMenu();
+		Zapic.Show(ZapicSDK.Views.Default);
 	}
 }
