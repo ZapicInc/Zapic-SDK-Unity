@@ -1,6 +1,6 @@
 language: generic
 dist: trusty
-sudo: true
+sudo: false
 env:
   global:
     - iOS_SDK="v0.1.0-beta1"
