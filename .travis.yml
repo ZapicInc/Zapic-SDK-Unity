@@ -1,17 +1,17 @@
-language: objective-c
-osx_image: xcode8.3
+dist: trusty
+sudo: false
+env:
+  - iOS_SDK="v0.1.0-beta1"
+  - android_SDK=""
 branches:
   only:
   - master
   - /v\d+\.\d+\.\d+.*/
-cache:
-  directories:
-  - Carthage
 before_install:
 - chmod a+x ./Scripts/installUnity.sh
 - chmod a+x ./Scripts/exportPackage.sh
 install:
-- carthage bootstrap --platform iOS --no-build
+#- carthage bootstrap --platform iOS --no-build
 #- sh ./Scripts/installUnity.sh
 #script:
 #- ./Scripts/exportPackage.sh
