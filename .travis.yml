@@ -1,8 +1,9 @@
 dist: trusty
 sudo: false
 env:
-  - iOS_SDK="v0.1.0-beta1"
-  - android_SDK=""
+  global:
+    - iOS_SDK="v0.1.0-beta1"
+    - android_SDK=""
 branches:
   only:
   - master
