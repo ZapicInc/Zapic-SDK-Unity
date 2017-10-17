@@ -8,6 +8,7 @@ echo ""
 echo "===================================="
 echo "     Copying (iOS) dependencies     "
 echo "===================================="
+echo "           "$iOS_PLUGIN"            "
 echo ""
 
 #Location for the iOS framework
