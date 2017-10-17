@@ -12,10 +12,10 @@ branches:
 before_install:
 - chmod a+x ./Scripts/installUnity.sh
 - chmod a+x ./Scripts/exportPackage.sh
-#install:
-#- carthage bootstrap --platform iOS --no-build
+install:
+- sh ./Scripts/installIOSSDK.sh
 #- sh ./Scripts/installUnity.sh
-#script:
+script:
 #- ./Scripts/exportPackage.sh
 #deploy:
 #  provider: releases
