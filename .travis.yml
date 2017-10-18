@@ -1,4 +1,4 @@
-language: generic
+language: csharp
 dist: trusty
 sudo: required
 env:
@@ -10,12 +10,12 @@ branches:
   - master
   - /v\d+\.\d+\.\d+.*/
 before_install:
-- sudo apt-get install gdebi
-- chmod a+x ./Scripts/installUnity.sh
+# - sudo apt-get install gdebi
+# - chmod a+x ./Scripts/installUnity.sh
 - chmod a+x ./Scripts/exportPackage.sh
 install:
 - sh ./Scripts/installIOSSDK.sh
-- sh ./Scripts/installUnity.sh
+# - sh ./Scripts/installUnity.sh
 script:
 - ./Scripts/exportPackage.sh
 deploy:
