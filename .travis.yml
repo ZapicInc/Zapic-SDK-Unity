@@ -10,18 +10,19 @@ branches:
   - master
   - /v\d+\.\d+\.\d+.*/
 before_install:
+- sudo apt-get install gdebi
 - chmod a+x ./Scripts/installUnity.sh
 - chmod a+x ./Scripts/exportPackage.sh
 install:
 - sh ./Scripts/installIOSSDK.sh
 - sh ./Scripts/installUnity.sh
 script:
-#- ./Scripts/exportPackage.sh
-#deploy:
-#  provider: releases
-#  skip_cleanup: true
-#  api_key: $GITHUB 
-#  file: Zapic.unitypackage
-#  on:
-#    repo: ZapicInc/Zapic-SDK-Unity
-#    tags: true
+- ./Scripts/exportPackage.sh
+deploy:
+ provider: releases
+ skip_cleanup: true
+ api_key: $GITHUB 
+ file: Zapic.unitypackage
+ on:
+   repo: ZapicInc/Zapic-SDK-Unity
+   tags: true

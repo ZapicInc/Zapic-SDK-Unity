@@ -9,4 +9,5 @@ if [ $? -ne 0 ]; then { echo "Download failed"; exit $?; } fi
 
 # Run installer
 echo 'Installing Unity.deb'
-sudo dpkg -i ./Unity.deb
+# sudo dpkg -i ./Unity.deb
+sudo gdebi ./Unity.deb
