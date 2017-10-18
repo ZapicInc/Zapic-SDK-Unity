@@ -1,25 +1,28 @@
-language: objective-c
-osx_image: xcode8.3
+language: generic
+dist: trusty
+sudo: required
+env:
+  global:
+    - iOS_SDK="v0.1.0-beta1"
+    - android_SDK=""
 branches:
   only:
   - master
   - /v\d+\.\d+\.\d+.*/
-cache:
-  directories:
-  - Carthage
 before_install:
+- sudo apt-get install gdebi
 - chmod a+x ./Scripts/installUnity.sh
 - chmod a+x ./Scripts/exportPackage.sh
 install:
-- carthage bootstrap --platform iOS
+- sh ./Scripts/installIOSSDK.sh
 - sh ./Scripts/installUnity.sh
 script:
 - ./Scripts/exportPackage.sh
 deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key: $GITHUB 
-  file: Zapic.unitypackage
-  on:
-    repo: ZapicInc/Zapic-SDK-Unity
-    tags: true
+ provider: releases
+ skip_cleanup: true
+ api_key: $GITHUB 
+ file: Zapic.unitypackage
+ on:
+   repo: ZapicInc/Zapic-SDK-Unity
+   tags: true
