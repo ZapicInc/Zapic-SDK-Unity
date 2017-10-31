@@ -42,6 +42,11 @@ public class iOSBuildSettings
             //Find the existing framework id
             var frameworkId = proj.FindFileGuidByProjectPath("Frameworks/Plugins/iOS/Zapic.framework");
 
+            if (string.IsNullOrEmpty(frameworkId))
+            {
+                Debug.LogError("Zapic: Unable to find iOS framework");
+            }
+
             Debug.Log("Zapic:Adding embedded frameworks");
             string embedPhase = proj.AddCopyFilesBuildPhase(targetGuid, "Embed Frameworks", "", "10");
 
@@ -49,11 +54,15 @@ public class iOSBuildSettings
 
             // Apply settings
             File.WriteAllText(projPath, proj.WriteToString());
+
+            Debug.Log("Zapic:Done configuring xcode settings");
         }
     }
 
     private static void ConfigureXcodePlist(BuildTarget buildTarget, string pathToBuiltProject)
     {
+        Debug.Log("Zapic:Configuring plist");
+
         // Samlpe of editing Info.plist
         var plistPath = Path.Combine(pathToBuiltProject, "Info.plist");
         var plist = new PlistDocument();
@@ -65,6 +74,8 @@ public class iOSBuildSettings
 
         // Apply editing settings to Info.plist
         plist.WriteToFile(plistPath);
+
+        Debug.Log("Zapic:Done configuring plist");
     }
 
 #endif

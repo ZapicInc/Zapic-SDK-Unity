@@ -48,3 +48,7 @@ Assets/Plugins/
 Assets/Plugins\.meta
 
 unity\.log
+
+ICSharpCode\.SharpZipLib\.dll
+
+UnityPacker\.exe
