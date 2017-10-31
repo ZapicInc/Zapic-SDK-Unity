@@ -42,6 +42,11 @@ public class iOSBuildSettings
             //Find the existing framework id
             var frameworkId = proj.FindFileGuidByProjectPath("Frameworks/Plugins/iOS/Zapic.framework");
 
+            //Try lowercase
+            if(string.IsNullOrEmpty(frameworkId)){
+                frameworkId = proj.FindFileGuidByProjectPath("Frameworks/Plugins/iOS/zapic.framework");
+            }
+
             if (string.IsNullOrEmpty(frameworkId))
             {
                 Debug.LogError("Zapic: Unable to find iOS framework");
