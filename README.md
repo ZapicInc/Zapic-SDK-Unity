@@ -4,7 +4,7 @@
 
 This open-source library allows you to integrate Zapic into your Unity app.
 
-Learn more about about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developer.zapic.com
+Learn more about about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://www.zapic.com
 
 GIVE FEEDBACK
 -------------
