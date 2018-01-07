@@ -14,3 +14,7 @@ CONTRIBUTING
 -------------
 We are always accepting contributions to the Zapic SDK for Unity, simply submit a pull request.
 
+How to create a release
+-------------
+Simply create a new [release](https://github.com/ZapicInc/Zapic-SDK-Unity/releases). Ensure the version follows the required format of "vX.X.X" for example "v1.2.3". CI should automatically place all artifacts within the GitHub release upon build completion.
+
