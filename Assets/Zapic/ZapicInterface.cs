@@ -63,6 +63,88 @@ namespace ZapicSDK
 
     }
 
+    internal sealed class ZapicAndroidInterface : IZapicInterface
+    {
+        public void Start(string version)
+        {
+            using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using (var currentActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
+            using (var versionObject = new AndroidJavaObject("java.lang.String", version))
+            using (var zapicFragmentClass = new AndroidJavaClass("com.zapic.android.zapiclibrary.ZapicFragment"))
+            {
+                IntPtr methodId = AndroidJNI.GetStaticMethodID(
+                    zapicFragmentClass.GetRawClass(),
+                    "startZapicFragment",
+                    "(Landroid/app/Activity;Ljava/lang/String;)V");
+                object[] objectArray = new object[2];
+                jvalue[] argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
+                try
+                {
+                    argArray[0].l = currentActivityObject.GetRawObject();
+                    argArray[1].l = versionObject.GetRawObject();
+                    AndroidJNI.CallStaticVoidMethod(zapicFragmentClass.GetRawClass(), methodId, argArray);
+                }
+                finally
+                {
+                    AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
+                }
+            }
+        }
+
+        public void Show(Views view)
+        {
+            using (var viewObject = new AndroidJavaObject("java.lang.String", view.ToString().ToLower()))
+            using (var zapicFragmentClass = new AndroidJavaClass("com.zapic.android.zapiclibrary.ZapicFragment"))
+            {
+                IntPtr methodId = AndroidJNI.GetStaticMethodID(
+                    zapicFragmentClass.GetRawClass(),
+                    "showZapicFragment",
+                    "(Ljava/lang/String;)V");
+                object[] objectArray = new object[1];
+                jvalue[] argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
+                try
+                {
+                    argArray[0].l = viewObject.GetRawObject();
+                    AndroidJNI.CallStaticVoidMethod(zapicFragmentClass.GetRawClass(), methodId, argArray);
+                }
+                finally
+                {
+                    AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
+                }
+            }
+        }
+
+        public Guid? PlayerId()
+        {
+            return null;
+        }
+
+        public void SubmitEvent(Dictionary<string, object> param)
+        {
+            var json = JsonUtility.ToJson(param);
+
+            using (var paramObject = new AndroidJavaObject("java.lang.String", json))
+            using (var zapicFragmentClass = new AndroidJavaClass("com.zapic.android.zapiclibrary.ZapicFragment"))
+            {
+                IntPtr methodId = AndroidJNI.GetStaticMethodID(
+                    zapicFragmentClass.GetRawClass(),
+                    "submitEventZapicFragment",
+                    "(Ljava/lang/String;)V");
+                object[] objectArray = new object[1];
+                jvalue[] argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
+                try
+                {
+                    argArray[0].l = paramObject.GetRawObject();
+                    AndroidJNI.CallStaticVoidMethod(zapicFragmentClass.GetRawClass(), methodId, argArray);
+                }
+                finally
+                {
+                    AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
+                }
+            }
+        }
+    }
+
     internal sealed class ZapiciOSInterface : IZapicInterface
     {
         #region DLLImports
