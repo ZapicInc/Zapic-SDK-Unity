@@ -25,10 +25,9 @@ public static class Zapic
     /// Starts zapic. This should be called
     /// as soon as possible during app startup.
     /// </summary>
-    /// <param name="version">App version id.</param>
-    public static void Start(string version)
+    public static void Start()
     {
-        _interface.Start(version);
+        _interface.Start();
     }
 
     /// <summary>
@@ -44,7 +43,7 @@ public static class Zapic
     /// Gets the current players unique id.
     /// </summary>
     /// <returns>The unique id.</returns>
-    public static Guid? PlayerId()
+    public static string PlayerId()
     {
         return _interface.PlayerId();
     }

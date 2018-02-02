@@ -1,9 +1,10 @@
 language: csharp
+mono: alpha
 dist: trusty
 sudo: required
 env:
   global:
-    - iOS_SDK="v1.0.0"
+    - iOS_SDK="v1.0.1"
     - android_SDK=""
 branches:
   only:
