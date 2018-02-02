@@ -6,7 +6,7 @@ public class ExampleStartup : MonoBehaviour
 {
     void Start()
     {
-        Zapic.Start("v0.1");
+        Zapic.Start();
     }
 
     void Update()
@@ -17,7 +17,9 @@ public class ExampleStartup : MonoBehaviour
             {
                 {"SCORE",22},
                 {"PARAM2","abc"},
-                {"PARAM3",true}
+                {"PARAM3",true},
+                {"PARAM4","\"blab"},
+                 {"PAR\"AM5","\"blab"}
             };
 
             Zapic.SubmitEvent(p);
