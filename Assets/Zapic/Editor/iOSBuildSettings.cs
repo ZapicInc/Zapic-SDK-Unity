@@ -1,14 +1,13 @@
-﻿using UnityEngine;
+﻿#if UNITY_IOS
+using System.Collections;
+using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using System.Collections;
-using System.Text.RegularExpressions;
-using System.Reflection;
-#if UNITY_IOS
 using UnityEditor.iOS.Xcode;
 using UnityEditor.iOS.Xcode.Extensions;
-#endif
-using System.IO;
+using UnityEngine;
 
 namespace Zapic
 {
@@ -17,13 +16,10 @@ namespace Zapic
         [PostProcessBuild]
         public static void OnPostprocessBuild(BuildTarget buildTarget, string pathToBuiltProject)
         {
-#if UNITY_IOS
             ConfigureXcodeSettings(buildTarget, pathToBuiltProject);
             ConfigureXcodePlist(buildTarget, pathToBuiltProject);
-#endif
         }
 
-#if UNITY_IOS
         private static void ConfigureXcodeSettings(BuildTarget buildTarget, string pathToBuiltProject)
         {
             if (buildTarget != BuildTarget.iOS)
@@ -69,7 +65,6 @@ namespace Zapic
 
             if (string.IsNullOrEmpty(scriptId))
                 proj.AppendShellScriptBuildPhase(targetGuid, ScriptName, "/bin/sh", StripArchScript());
-
 
             //Gets the entire project as a string
             string contents = proj.WriteToString();
@@ -124,7 +119,6 @@ echo $(lipo -info ""$FRAMEWORK_EXECUTABLE_PATH"")
 
 FRAMEWORK_TMP_PATH=""$FRAMEWORK_EXECUTABLE_PATH-tmp""
 
-# remove simulator's archs if location is not simulator's directory
 case ""${TARGET_BUILD_DIR}"" in
 *""iphonesimulator"")
 echo ""No need to remove archs""
@@ -151,9 +145,6 @@ echo $(lipo -info ""$FRAMEWORK_EXECUTABLE_PATH"")
 done
             ";
         }
-
-#endif
-
     }
 
     internal static class PBXExtensions
@@ -196,4 +187,4 @@ done
     }
 }
 
-
+#endif
