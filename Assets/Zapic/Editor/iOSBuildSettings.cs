@@ -5,15 +5,15 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode;
-using UnityEditor.iOS.Xcode.Extensions;
+using UnityEditor.iOS.Xcode.Custom;
+using UnityEditor.iOS.Xcode.Custom.Extensions;
 using UnityEngine;
 
 namespace Zapic
 {
     public class iOSBuildSettings
     {
-        [PostProcessBuild]
+        [PostProcessBuild(999)]
         public static void OnPostprocessBuild(BuildTarget buildTarget, string pathToBuiltProject)
         {
             ConfigureXcodeSettings(buildTarget, pathToBuiltProject);
@@ -27,7 +27,7 @@ namespace Zapic
 
             Debug.Log("Running Zapic Xcode Scripts");
 
-            string projPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);// pathToBuiltProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
+            string projPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
 
             //Find and load the xcode project
             var proj = new PBXProject();
@@ -53,30 +53,15 @@ namespace Zapic
             }
 
             //Get or Add a copy files build phase
-            Debug.Log("Zapic:Adding embedded frameworks");
+            Debug.Log("Zapic:Adding embedded framework");
 
-            string embedPhase = proj.AddCopyFilesBuildPhase(targetGuid, "Embed Zapic Framework", "", "10");
+            proj.AddFileToEmbedFrameworks(targetGuid, frameworkId);
 
-            proj.AddFileToBuildSection(targetGuid, embedPhase, frameworkId);
+            //Stip the framework to the propery build type
+            proj.AddStripFatFrameworkScript(targetGuid);
 
-            const string ScriptName = "Strip Fat Library";
-
-            var scriptId = proj.ShellScriptByName(targetGuid, ScriptName);
-
-            if (string.IsNullOrEmpty(scriptId))
-                proj.AppendShellScriptBuildPhase(targetGuid, ScriptName, "/bin/sh", StripArchScript());
-
-            //Gets the entire project as a string
-            string contents = proj.WriteToString();
-
-            //Enable CodeSignOnCopy for the framework
-            contents = Regex.Replace(contents,
-                "(?<=Embed Frameworks)(?:.*)(\\/\\* Zapic\\.framework \\*\\/)(?=; };)",
-                m => m.Value.Replace("/* Zapic.framework */",
-                    "/* Zapic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }"));
-
-            //Save the project file
-            File.WriteAllText(projPath, contents);
+            //Save the project
+            proj.WriteToFile(projPath);
 
             Debug.Log("Zapic:Done configuring xcode settings");
         }
@@ -101,49 +86,6 @@ namespace Zapic
             plist.WriteToFile(plistPath);
 
             Debug.Log("Zapic:Done configuring plist");
-        }
-
-        private static string StripArchScript()
-        {
-            return @"
-echo ""Target architectures: $ARCHS""
-
-APP_PATH=""${TARGET_BUILD_DIR}/${WRAPPER_NAME}""
-
-find ""$APP_PATH"" -name '*.framework' -type d | while read -r FRAMEWORK
-do
-FRAMEWORK_EXECUTABLE_NAME=$(defaults read ""$FRAMEWORK/Info.plist"" CFBundleExecutable)
-FRAMEWORK_EXECUTABLE_PATH=""$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME""
-echo ""Executable is $FRAMEWORK_EXECUTABLE_PATH""
-echo $(lipo -info ""$FRAMEWORK_EXECUTABLE_PATH"")
-
-FRAMEWORK_TMP_PATH=""$FRAMEWORK_EXECUTABLE_PATH-tmp""
-
-case ""${TARGET_BUILD_DIR}"" in
-*""iphonesimulator"")
-echo ""No need to remove archs""
-;;
-*)
-if $(lipo ""$FRAMEWORK_EXECUTABLE_PATH"" -verify_arch ""i386"") ; then
-lipo -output ""$FRAMEWORK_TMP_PATH"" -remove ""i386"" ""$FRAMEWORK_EXECUTABLE_PATH""
-echo ""i386 architecture removed""
-rm ""$FRAMEWORK_EXECUTABLE_PATH""
-mv ""$FRAMEWORK_TMP_PATH"" ""$FRAMEWORK_EXECUTABLE_PATH""
-fi
-if $(lipo ""$FRAMEWORK_EXECUTABLE_PATH"" -verify_arch ""x86_64"") ; then
-lipo -output ""$FRAMEWORK_TMP_PATH"" -remove ""x86_64"" ""$FRAMEWORK_EXECUTABLE_PATH""
-echo ""x86_64 architecture removed""
-rm ""$FRAMEWORK_EXECUTABLE_PATH""
-mv ""$FRAMEWORK_TMP_PATH"" ""$FRAMEWORK_EXECUTABLE_PATH""
-fi
-;;
-esac
-
-echo ""Completed for executable $FRAMEWORK_EXECUTABLE_PATH""
-echo $(lipo -info ""$FRAMEWORK_EXECUTABLE_PATH"")
-
-done
-            ";
         }
     }
 
@@ -184,7 +126,61 @@ done
 
             return result as string;
         }
+
+        public static void AddStripFatFrameworkScript(this PBXProject proj, string targetGuid)
+        {
+            Debug.Log("Zapic: Adding strip framework");
+
+            const string ScriptName = "Strip Fat Library";
+
+            var scriptId = proj.ShellScriptByName(targetGuid, ScriptName);
+
+            if (string.IsNullOrEmpty(scriptId))
+                proj.AppendShellScriptBuildPhase(targetGuid, ScriptName, "/bin/sh", StripArchScript);
+        }
+
+        private static readonly string StripArchScript =
+            @"
+echo ""Target architectures: $ARCHS""
+
+APP_PATH=""${TARGET_BUILD_DIR}/${WRAPPER_NAME}""
+
+find ""$APP_PATH"" -name '*.framework' -type d | while read -r FRAMEWORK
+do
+FRAMEWORK_EXECUTABLE_NAME=$(defaults read ""$FRAMEWORK/Info.plist"" CFBundleExecutable)
+FRAMEWORK_EXECUTABLE_PATH=""$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME""
+echo ""Executable is $FRAMEWORK_EXECUTABLE_PATH""
+echo $(lipo -info ""$FRAMEWORK_EXECUTABLE_PATH"")
+
+FRAMEWORK_TMP_PATH=""$FRAMEWORK_EXECUTABLE_PATH-tmp""
+
+# remove simulator's archs if location is not simulator's directory
+case ""${TARGET_BUILD_DIR}"" in
+*""iphonesimulator"")
+echo ""No need to remove archs""
+;;
+*)
+if $(lipo ""$FRAMEWORK_EXECUTABLE_PATH"" -verify_arch ""i386"") ; then
+lipo -output ""$FRAMEWORK_TMP_PATH"" -remove ""i386"" ""$FRAMEWORK_EXECUTABLE_PATH""
+echo ""i386 architecture removed""
+rm ""$FRAMEWORK_EXECUTABLE_PATH""
+mv ""$FRAMEWORK_TMP_PATH"" ""$FRAMEWORK_EXECUTABLE_PATH""
+fi
+if $(lipo ""$FRAMEWORK_EXECUTABLE_PATH"" -verify_arch ""x86_64"") ; then
+lipo -output ""$FRAMEWORK_TMP_PATH"" -remove ""x86_64"" ""$FRAMEWORK_EXECUTABLE_PATH""
+echo ""x86_64 architecture removed""
+rm ""$FRAMEWORK_EXECUTABLE_PATH""
+mv ""$FRAMEWORK_TMP_PATH"" ""$FRAMEWORK_EXECUTABLE_PATH""
+fi
+;;
+esac
+
+echo ""Completed for executable $FRAMEWORK_EXECUTABLE_PATH""
+echo $(lipo -info ""$FRAMEWORK_EXECUTABLE_PATH"")
+
+done
+            ";
+
     }
 }
-
 #endif
