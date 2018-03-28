@@ -4,7 +4,7 @@ dist: trusty
 sudo: required
 env:
   global:
-    - iOS_SDK="v1.0.1"
+    - iOS_SDK="v1.0.2"
     - android_SDK=""
 branches:
   only:

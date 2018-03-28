@@ -8,6 +8,7 @@ using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode.Custom;
 using UnityEditor.iOS.Xcode.Custom.Extensions;
 using UnityEngine;
+
 namespace Zapic
 {
     public class iOSBuildSettings
@@ -15,7 +16,6 @@ namespace Zapic
         [PostProcessBuild(999)]
         public static void OnPostprocessBuild(BuildTarget buildTarget, string pathToBuiltProject)
         {
-
             ConfigureXcodeSettings(buildTarget, pathToBuiltProject);
             ConfigureXcodePlist(buildTarget, pathToBuiltProject);
         }
@@ -87,8 +87,6 @@ namespace Zapic
 
             Debug.Log("Zapic:Done configuring plist");
         }
-#endif
-
     }
 
     internal static class PBXExtensions
@@ -185,3 +183,4 @@ done
 
     }
 }
+#endif

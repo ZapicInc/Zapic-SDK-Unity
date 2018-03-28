@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using ZapicSDK;
 
-
 public static class Zapic
 {
     private static readonly IZapicInterface _interface;
@@ -17,7 +16,7 @@ public static class Zapic
 #elif UNITY_IOS
         _interface = new ZapiciOSInterface();
 #elif UNITY_ANDROID
-        throw new NotImplementedException("Android is not currently supported");
+        _interface = new ZapicAndroidInterface();
 #endif
     }
 

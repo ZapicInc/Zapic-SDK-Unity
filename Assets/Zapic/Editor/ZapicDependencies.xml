@@ -1,0 +1,16 @@
+<dependencies>
+  <androidPackages>
+    <androidPackage spec="com.android.support:cardview-v7:27.1.0" />
+    <androidPackage spec="com.android.support:support-fragment:27.1.0" />
+    <androidPackage spec="com.google.android.gms:play-services-auth:11.8.0">
+      <androidSdkPackageIds>
+        <androidSdkPackageId>extra-google-m2repository</androidSdkPackageId>
+      </androidSdkPackageIds>
+    </androidPackage>
+    <androidPackage spec="com.google.android.gms:play-services-games:11.8.0">
+      <androidSdkPackageIds>
+        <androidSdkPackageId>extra-google-m2repository</androidSdkPackageId>
+      </androidSdkPackageIds>
+    </androidPackage>
+  </androidPackages>
+</dependencies>
