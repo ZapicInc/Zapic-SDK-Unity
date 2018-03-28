@@ -1,10 +1,10 @@
-# Zapic-SDK-Unity
+# Zapic SDK for Unity
 
 [![Build Status](https://travis-ci.org/ZapicInc/Zapic-SDK-Unity.svg?branch=master)](https://travis-ci.org/ZapicInc/Zapic-SDK-Unity) [![CodeFactor](https://www.codefactor.io/repository/github/zapicinc/zapic-sdk-unity/badge)](https://www.codefactor.io/repository/github/zapicinc/zapic-sdk-unity) [![MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Copyright (c) 2017-2018 Zapic, Inc.
 
-The Zapic SDK for Unity is an open-source project that allows game developers to integrate with the Zapic platform from a game written in Unity. This project is not endorsed by Unity Technologies.
+The Zapic SDK for Unity is an open-source project that allows game developers to integrate with the Zapic platform from a game written in Unity for iOS or Android.
 
 _Unity is a trademark of Unity Technologies._
 
@@ -14,32 +14,26 @@ _Android is a trademark of Google LLC._
 
 ## Getting Started
 
-Learn more about about integrating the SDK and the provided samples at https://www.zapic.com/docs/.
+Learn more about integrating the SDK and configuring your Unity game in the Zapic platform at https://www.zapic.com/docs/unity.
 
-## Feedback and Support
+Take note that the Zapic SDK for Unity requires the [Google Play Games plugin for Unity](https://github.com/playgameservices/play-games-plugin-for-unity) when building for Android. The Google Play Games plugin for Unity should be installed and configured before installing the Zapic SDK for Unity.
 
-Please report bugs and issues on [GitHub](https://github.com/ZapicInc/Zapic-SDK-Unity/issues).
+## Community
 
-Please ask questions and request help on [StackOverflow](https://stackoverflow.com) and include a `zapic` tag.
+Ask questions on [Stack Overflow](https://stackoverflow.com/questions/ask?tags=zapic). Be sure to include the `zapic` tag with your question.
+
+Chat on Slack. (_Coming Soon!_)
+
+Follow [@ZapicInc](https://twitter.com/ZapicInc) on Twitter for important announcements.
+
+Report bugs and discuss new features on [GitHub](https://github.com/ZapicInc/Zapic-SDK-Unity/issues).
 
 ## Contributing
 
-We are always accepting contributions to the Zapic SDK for Unity. Simply fork the repository and [submit a pull request on GitHub](https://github.com/ZapicInc/Zapic-SDK-Unity/pulls).
+We accept contributions to the Zapic SDK for Unity. Simply fork the repository and submit a pull request on [GitHub](https://github.com/ZapicInc/Zapic-SDK-Unity/pulls).
 
-## iOS Notes
+## Quick Links
 
-### Creating a new release
-
-Edit the `.travis.yml` file to include the updated version of the [Zapic SDK for iOS](https://github.com/ZapicInc/Zapic-SDK-iOS). This must match the desired tag name exactly.
-
-Create a new [release on GitHub](https://github.com/ZapicInc/Zapic-SDK-Unity/releases).
-
-## Android Notes
-
-When targeting Android, the Zapic SDK for Unity depends on the [Google Play Games plugin for Unity](https://github.com/playgameservices/play-games-plugin-for-unity). The Google Play Games plugin for Unity should be installed and configured before installing the Zapic plugin for Unity.
-
-### Creating a new release
-
-Edit the `.travis.yml` file to include the updated version of the [Zapic SDK for Android](https://github.com/ZapicInc/Zapic-SDK-Android). This must match the desired tag name exactly.
-
-Create a new [release on GitHub](https://github.com/ZapicInc/Zapic-SDK-Unity/releases).
+* [Zapic Documentation](https://www.zapic.com/docs)
+* [Zapic SDK for iOS](https://github.com/ZapicInc/Zapic-SDK-iOS)
+* [Zapic SDK for Android](https://github.com/ZapicInc/Zapic-SDK-Android)
