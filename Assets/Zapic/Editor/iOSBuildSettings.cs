@@ -154,7 +154,6 @@ echo $(lipo -info ""$FRAMEWORK_EXECUTABLE_PATH"")
 
 FRAMEWORK_TMP_PATH=""$FRAMEWORK_EXECUTABLE_PATH-tmp""
 
-# remove simulator's archs if location is not simulator's directory
 case ""${TARGET_BUILD_DIR}"" in
 *""iphonesimulator"")
 echo ""No need to remove archs""
