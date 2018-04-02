@@ -1,6 +1,6 @@
 # Zapic SDK for Unity
 
-[![Build Status](https://travis-ci.org/ZapicInc/Zapic-SDK-Unity.svg?branch=master)](https://travis-ci.org/ZapicInc/Zapic-SDK-Unity) [![CodeFactor](https://www.codefactor.io/repository/github/zapicinc/zapic-sdk-unity/badge)](https://www.codefactor.io/repository/github/zapicinc/zapic-sdk-unity) [![MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/ZapicInc/Zapic-SDK-Unity.svg?branch=master)](https://travis-ci.org/ZapicInc/Zapic-SDK-Unity) [![CodeFactor](https://www.codefactor.io/repository/github/zapicinc/zapic-sdk-unity/badge)](https://www.codefactor.io/repository/github/zapicinc/zapic-sdk-unity) [![MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Chat on Slack](https://slack.zapic.com/badge.svg)](https://slack.zapic.com)
 
 Copyright (c) 2017-2018 Zapic, Inc.
 
@@ -22,7 +22,7 @@ Take note that the Zapic SDK for Unity requires the [Google Play Games plugin fo
 
 Ask questions on [Stack Overflow](https://stackoverflow.com/questions/ask?tags=zapic). Be sure to include the `zapic` tag with your question.
 
-Chat on Slack. (_Coming Soon!_)
+Chat on [Slack](https://slack.zapic.com).
 
 Follow [@ZapicInc](https://twitter.com/ZapicInc) on Twitter for important announcements.
 
