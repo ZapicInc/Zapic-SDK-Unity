@@ -79,8 +79,8 @@ namespace Zapic
             plist.ReadFromFile(plistPath);
 
             // Add string setting
-            plist.root.SetString("NSContactsUsageDescription", "We'll use your Contacts to find people you know on Zapic.");
             plist.root.SetString("NSPhotoLibraryUsageDescription", "Zapic will only use the Photos you select.");
+            plist.root.SetString("NSCameraUsageDescription", "Zapic allows your to take photos.");
 
             // Apply editing settings to Info.plist
             plist.WriteToFile(plistPath);
