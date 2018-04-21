@@ -21,7 +21,25 @@ namespace ZapicSDK
         /// Gets the current players unique id.
         /// </summary>
         /// <returns>The unique id.</returns>
-        string PlayerId();
+        ZapicPlayer Player();
+
+        /// <summary>
+        /// Callback when the player logins in
+        /// </summary>
+        /// <param name="loginHandler">Callback handler</param>
+        void OnLoginHandler(Action<ZapicPlayer> loginHandler);
+
+        /// <summary>
+        /// Callback when the player logins out
+        /// </summary>
+        /// <param name="logoutHandler">Callback handler</param>
+        void OnLogoutHandler(Action<ZapicPlayer> logoutHandler);
+
+        /// <summary>
+        /// Handle Zapic data. Usually from an integration like push notifications.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        void HandleData(Dictionary<string, object> data);
 
         /// <summary>
         /// Submit a new in-game event to zapic.

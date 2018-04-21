@@ -39,18 +39,45 @@ public static class Zapic
     }
 
     /// <summary>
-    /// Gets the current players unique id.
+    /// Gets the current player.
     /// </summary>
-    /// <returns>The unique id.</returns>
-    public static string PlayerId()
+    /// <returns>The player</returns>
+    public static ZapicPlayer Player()
     {
-        return _interface.PlayerId();
+        return _interface.Player();
+    }
+
+    /// <summary>
+    /// Callback when the player logins in
+    /// </summary>
+    /// <param name="loginHandler">Callback handler</param>
+    public static void OnLoginHandler(Action<ZapicPlayer> loginHandler)
+    {
+        _interface.OnLoginHandler(loginHandler);
+    }
+
+    /// <summary>
+    /// Callback when the player logins out
+    /// </summary>
+    /// <param name="logoutHandler">Callback handler</param>
+    public static void OnLogoutHandler(Action<ZapicPlayer> logoutHandler)
+    {
+        _interface.OnLogoutHandler(logoutHandler);
+    }
+
+    /// <summary>
+    /// Handle Zapic data. Usually from an integration like push notifications.
+    /// </summary>
+    /// <param name="data">The data.</param>
+    public static void HandleData(Dictionary<string, object> data)
+    {
+        _interface.HandleData(data);
     }
 
     /// <summary>
     /// Submit a new in-game event to zapic.
     /// </summary>
-    /// /// <param name="param">Collection of parameter names and associate values (numeric, string, bool)</param>
+    /// <param name="param">Collection of parameter names and associate values (numeric, string, bool)</param>
     public static void SubmitEvent(Dictionary<string, object> param)
     {
         _interface.SubmitEvent(param);

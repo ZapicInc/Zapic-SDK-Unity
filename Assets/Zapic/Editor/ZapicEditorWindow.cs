@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,41 +24,41 @@ class ZapicEditorWindow : EditorWindow
 </manifest>";
 
 	[MenuItem("Window/Zapic/Configure Android...")]
-    public static void ShowZapicMenu()
-    {
+	public static void ShowZapicMenu()
+	{
 		EditorWindow window = EditorWindow.GetWindow(typeof(ZapicEditorWindow), true, "Zapic");
 		window.minSize = new Vector2(400, 250);
-    }
+	}
 
-    void OnGUI()
-    {
-        GUI.skin.label.wordWrap = true;
-        GUILayout.BeginVertical();
+	void OnGUI()
+	{
+		GUI.skin.label.wordWrap = true;
+		GUILayout.BeginVertical();
 
-        GUIStyle link = new GUIStyle(GUI.skin.label);
-        link.normal.textColor = new Color(0f, 0f, 1f);
+		GUIStyle link = new GUIStyle(GUI.skin.label);
+		link.normal.textColor = new Color(0f, 0f, 1f);
 
-        GUILayout.Space(10);
+		GUILayout.Space(10);
 
-        GUILayout.Label("Zapic uses Google Play Games Services to authenticate users on Android. After importing and configuring the Google Play Games plugin for Unity, select the \"Configure\" button below to import the required settings for Zapic.");
+		GUILayout.Label("Zapic uses Google Play Games Services to authenticate users on Android. After importing and configuring the Google Play Games plugin for Unity, select the \"Configure\" button below to import the required settings for Zapic.");
 
-        GUILayout.Space(20);
+		GUILayout.Space(20);
 
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
+		GUILayout.BeginHorizontal();
+		GUILayout.FlexibleSpace();
 
-        if (GUILayout.Button("Configure", GUILayout.Width(100)))
-        {
-            Configure();
-        }
+		if (GUILayout.Button("Configure", GUILayout.Width(100)))
+		{
+			Configure();
+		}
 
-        if (GUILayout.Button("Cancel", GUILayout.Width(100)))
-        {
-            Close();
-        }
+		if (GUILayout.Button("Cancel", GUILayout.Width(100)))
+		{
+			Close();
+		}
 
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
+		GUILayout.FlexibleSpace();
+		GUILayout.EndHorizontal();
 
 		GUILayout.Space(20);
 
@@ -72,28 +75,43 @@ class ZapicEditorWindow : EditorWindow
 
 		GUILayout.Space(10);
 
-        GUILayout.EndVertical();
-    }
+		GUILayout.EndVertical();
+	}
 
 	private string GetManifest(string webClientId)
 	{
 		return string.Format(TemplateFile, webClientId);
 	}
 
-    private void Configure()
-    {
-		var webClientId = GooglePlayGames.GameInfo.WebClientId;
-		if (string.IsNullOrEmpty(webClientId)) {
-			Debug.LogError("Please import and configure the Google Play Games plugin for Unity.");
-			return;
+	private void Configure()
+	{
+		try
+		{
+			var gameInfoType = Type.GetType("GooglePlayGames.GameInfo");
+
+			var infoField = gameInfoType.GetFields(BindingFlags.Public | BindingFlags.Static |
+					BindingFlags.FlattenHierarchy)
+				.Where(fi => fi.IsLiteral && !fi.IsInitOnly).FirstOrDefault(f => f.Name == "WebClientId");
+
+			var webClientId = (string) infoField.GetRawConstantValue();
+
+			if (string.IsNullOrEmpty(webClientId))
+			{
+				Debug.LogError("Please import and configure the Google Play Games plugin for Unity.");
+				return;
+			}
+
+			var manifest = GetManifest(webClientId);
+			WriteFile(ManifestPath, manifest);
+
+			EditorUtility.DisplayDialog("Zapic", "Successfully configured Zapic for Android.", "OK");
+			Close();
 		}
-
-		var manifest = GetManifest(webClientId);
-		WriteFile(ManifestPath, manifest);
-
-		EditorUtility.DisplayDialog("Zapic", "Successfully configured Zapic for Android.", "OK");
-		Close();
-    }
+		catch
+		{
+			Debug.LogError("GooglePlayGames is not configured properly.");
+		}
+	}
 
 	private static void WriteFile(string path, string body)
 	{

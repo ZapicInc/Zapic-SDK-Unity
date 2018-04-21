@@ -107,5 +107,25 @@ namespace ZapicSDK
                 }
             }
         }
+
+        public ZapicPlayer Player()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnLoginHandler(Action<ZapicPlayer> loginHandler)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnLogoutHandler(Action<ZapicPlayer> logoutHandler)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void HandleData(Dictionary<string, object> data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
