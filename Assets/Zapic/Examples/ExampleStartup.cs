@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ExampleStartup : MonoBehaviour
@@ -8,12 +7,12 @@ public class ExampleStartup : MonoBehaviour
     {
         Zapic.Start();
 
-        Zapic.OnLoginHandler((player) =>
+        Zapic.OnLogin = ((player) =>
         {
             Debug.LogFormat("Player logged in. Id:{0}, Notification:{1}", player.PlayerId, player.NotificationToken);
         });
 
-        Zapic.OnLogoutHandler((player) =>
+        Zapic.OnLogout = ((player) =>
         {
             Debug.LogFormat("Player logged out. Id:{0}, Notification:{1}", player.PlayerId, player.NotificationToken);
         });

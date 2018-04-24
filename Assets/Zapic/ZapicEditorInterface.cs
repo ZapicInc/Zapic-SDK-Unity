@@ -20,11 +20,41 @@ namespace ZapicSDK
 
         private Action<ZapicPlayer> _loginHandler;
 
+        private Action<ZapicPlayer> _logoutHandler;
+
         private readonly ZapicPlayer _player = new ZapicPlayer
         {
             PlayerId = "0000000-0000-0000-0000-000000000000",
             NotificationToken = "AAAAAAAAABBBBBBBBBCCCCCCCCC",
         };
+
+        public Action<ZapicPlayer> OnLogin
+        {
+            get
+            {
+                return _loginHandler;
+            }
+
+            set
+            {
+                Debug.LogFormat("Zapic:OnLogin set");
+                _loginHandler = value;
+            }
+        }
+
+        public Action<ZapicPlayer> OnLogout
+        {
+            get
+            {
+                return _logoutHandler;
+            }
+
+            set
+            {
+                Debug.LogFormat("Zapic:OnLogout set");
+                _logoutHandler = value;
+            }
+        }
 
         public void Start()
         {
@@ -87,17 +117,6 @@ namespace ZapicSDK
                 return;
 
             Debug.LogError("Zapic: Please ensure that Zapic.Start() is called before any other Zapic methods.");
-        }
-
-        public void OnLoginHandler(Action<ZapicPlayer> loginHandler)
-        {
-            Debug.LogFormat("Zapic:OnLoginHandler set");
-            _loginHandler = loginHandler;
-        }
-
-        public void OnLogoutHandler(Action<ZapicPlayer> logoutHandler)
-        {
-            Debug.LogFormat("Zapic:OnLogoutHandler set");
         }
 
         public void HandleData(Dictionary<string, object> data)

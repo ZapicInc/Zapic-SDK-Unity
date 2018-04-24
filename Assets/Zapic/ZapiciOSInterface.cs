@@ -38,23 +38,21 @@ namespace ZapicSDK
         [MonoPInvokeCallback(typeof(internal_PlayerLogin))]
         private static void _player_login(string playerJson)
         {
-            _player = Deserialize(playerJson);
-
             if (_loginHandler == null)
                 return;
 
-            _loginHandler(_player);
+            var player = DeserializePlayer(playerJson);
+            _loginHandler(player);
         }
 
         [MonoPInvokeCallback(typeof(internal_PlayerLogout))]
         private static void _player_logout(string playerJson)
         {
-            _player = Deserialize(playerJson);
-
             if (_logoutHandler == null)
                 return;
 
-            _logoutHandler(_player);
+            var player = DeserializePlayer(playerJson);
+            _logoutHandler(player);
         }
 
         #endregion DLLImports
@@ -63,12 +61,36 @@ namespace ZapicSDK
 
         private static Action<ZapicPlayer> _logoutHandler;
 
-        private static ZapicPlayer _player;
-
         public ZapiciOSInterface()
         {
             z_setLoginHandler(_player_login);
             z_setLogoutHandler(_player_logout);
+        }
+
+        public Action<ZapicPlayer> OnLogin
+        {
+            get
+            {
+                return _loginHandler;
+            }
+
+            set
+            {
+                _loginHandler = value;
+            }
+        }
+
+        public Action<ZapicPlayer> OnLogout
+        {
+            get
+            {
+                return _logoutHandler;
+            }
+
+            set
+            {
+                _logoutHandler = value;
+            }
         }
 
         /// <summary>
@@ -109,10 +131,9 @@ namespace ZapicSDK
         /// <returns>The player.</returns>
         public ZapicPlayer Player()
         {
-            if (_player == null)
-                _player = Deserialize(z_player());
-
-            return _player;
+            var playerJson = z_player();
+            var player = DeserializePlayer(playerJson);
+            return player;
         }
 
         public void HandleData(Dictionary<string, object> data)
@@ -133,7 +154,7 @@ namespace ZapicSDK
             z_submitEventWithParams(json);
         }
 
-        private static ZapicPlayer Deserialize(string playerJson)
+        private static ZapicPlayer DeserializePlayer(string playerJson)
         {
             UnityEngine.Debug.Log("Deserializing " + playerJson);
             if (playerJson == null)
@@ -151,19 +172,6 @@ namespace ZapicSDK
             };
 
             return player;
-        }
-
-        public void OnLoginHandler(Action<ZapicPlayer> loginHandler)
-        {
-            _loginHandler = loginHandler;
-
-            if (_player != null)
-                loginHandler(_player);
-        }
-
-        public void OnLogoutHandler(Action<ZapicPlayer> logoutHandler)
-        {
-            _logoutHandler = logoutHandler;
         }
     }
 }

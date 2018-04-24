@@ -18,6 +18,44 @@ public static class Zapic
     }
 
     /// <summary>
+    /// Gets or sets the callback invoked after the player has been logged in
+    /// </summary>
+    /// <remarks>
+    /// The player that has been logged in is passed to the callback.
+    /// </remarks>
+    public static Action<ZapicPlayer> OnLogin
+    {
+        get
+        {
+            return _interface.OnLogin;
+        }
+
+        set
+        {
+            _interface.OnLogin = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the callback invoked after the player has been logged out
+    /// </summary>
+    /// <remarks>
+    /// The player that has been logged out is passed to the callback.
+    /// </remarks>
+    public static Action<ZapicPlayer> OnLogout
+    {
+        get
+        {
+            return _interface.OnLogout;
+        }
+
+        set
+        {
+            _interface.OnLogout = value;
+        }
+    }
+
+    /// <summary>
     /// Starts zapic. This should be called
     /// as soon as possible during app startup.
     /// </summary>
@@ -42,24 +80,6 @@ public static class Zapic
     public static ZapicPlayer Player()
     {
         return _interface.Player();
-    }
-
-    /// <summary>
-    /// Callback when the player logins in
-    /// </summary>
-    /// <param name="loginHandler">Callback handler</param>
-    public static void OnLoginHandler(Action<ZapicPlayer> loginHandler)
-    {
-        _interface.OnLoginHandler(loginHandler);
-    }
-
-    /// <summary>
-    /// Callback when the player logins out
-    /// </summary>
-    /// <param name="logoutHandler">Callback handler</param>
-    public static void OnLogoutHandler(Action<ZapicPlayer> logoutHandler)
-    {
-        _interface.OnLogoutHandler(logoutHandler);
     }
 
     /// <summary>
