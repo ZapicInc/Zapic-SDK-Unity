@@ -8,8 +8,9 @@ namespace ZapicSDK
 {
     internal sealed class ZapiciOSInterface : IZapicInterface
     {
-        delegate void internal_PlayerLogin(string playerJson);
-        delegate void internal_PlayerLogout(string playerJson);
+        private delegate void internal_PlayerLogin(string playerJson);
+
+        private delegate void internal_PlayerLogout(string playerJson);
 
         #region DLLImports
 
@@ -35,7 +36,7 @@ namespace ZapicSDK
         private static extern string z_player();
 
         [MonoPInvokeCallback(typeof(internal_PlayerLogin))]
-        static void _player_login(string playerJson)
+        private static void _player_login(string playerJson)
         {
             _player = Deserialize(playerJson);
 
@@ -46,7 +47,7 @@ namespace ZapicSDK
         }
 
         [MonoPInvokeCallback(typeof(internal_PlayerLogout))]
-        static void _player_logout(string playerJson)
+        private static void _player_logout(string playerJson)
         {
             _player = Deserialize(playerJson);
 
@@ -56,7 +57,7 @@ namespace ZapicSDK
             _logoutHandler(_player);
         }
 
-        #endregion
+        #endregion DLLImports
 
         private static Action<ZapicPlayer> _loginHandler;
 
@@ -93,10 +94,10 @@ namespace ZapicSDK
                 case Views.Main:
                     viewName = "default";
                     break;
+
                 default:
                     viewName = view.ToString().ToLower();
                     break;
-
             }
 
             z_show(viewName);
@@ -145,8 +146,8 @@ namespace ZapicSDK
 
             var player = new ZapicPlayer
             {
-                PlayerId = (string) dict["playerId"],
-                NotificationToken = (string) dict["notificationToken"],
+                PlayerId = (string)dict["playerId"],
+                NotificationToken = (string)dict["notificationToken"],
             };
 
             return player;

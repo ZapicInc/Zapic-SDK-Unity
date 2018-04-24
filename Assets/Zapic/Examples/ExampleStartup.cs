@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ExampleStartup : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         Zapic.Start();
 
@@ -19,7 +19,7 @@ public class ExampleStartup : MonoBehaviour
         });
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -31,7 +31,7 @@ public class ExampleStartup : MonoBehaviour
         }
     }
 
-    void SendEvent()
+    private void SendEvent()
     {
         var p = new Dictionary<string, object>()
             { { "SCORE", 22 }, { "PARAM2", "abc" }, { "PARAM3", true }, { "PARAM4", "\"blab" }, { "PAR\"AM5", "\"blab" }
@@ -40,7 +40,7 @@ public class ExampleStartup : MonoBehaviour
         Zapic.SubmitEvent(p);
     }
 
-    void GetPlayer()
+    private void GetPlayer()
     {
         var player = Zapic.Player();
 
@@ -54,7 +54,7 @@ public class ExampleStartup : MonoBehaviour
         }
     }
 
-    void HandleData()
+    private void HandleData()
     {
         var data = new Dictionary<string, object>()
             { { "zapic", "/challenge/00000000-0000-0000-0000-000000000000" }

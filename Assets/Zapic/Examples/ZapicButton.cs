@@ -5,10 +5,8 @@ using UnityEngine.UI;
 
 public class ZapicButton : MonoBehaviour
 {
-
-    void Awake()
+    private void Awake()
     {
-
         var button = this.GetComponent<Button>();
 
         if (button == null)
