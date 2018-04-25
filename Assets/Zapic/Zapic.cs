@@ -4,6 +4,11 @@ using ZapicSDK;
 
 public static class Zapic
 {
+    /// <summary> 
+    /// The key used to identify the player's notification token 
+    /// </summary> 
+    public  const  string  NotificationTokenKey  =  "zapic_player_token"; 
+
     private static readonly IZapicInterface _interface;
 
     static Zapic()
