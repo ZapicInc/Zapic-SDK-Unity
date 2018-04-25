@@ -4,8 +4,8 @@ dist: trusty
 sudo: required
 env:
   global:
+    - Android_SDK="v1.0.1"
     - iOS_SDK="v1.0.3"
-    - android_SDK="v1.0.1"
 branches:
   only:
   - master
@@ -13,6 +13,7 @@ branches:
 before_install:
 - chmod a+x ./Scripts/exportPackage.sh
 install:
+- sh ./Scripts/installAndroidSDK.sh
 - sh ./Scripts/installIOSSDK.sh
 script:
 - ./Scripts/exportPackage.sh
