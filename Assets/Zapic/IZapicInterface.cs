@@ -6,6 +6,22 @@ namespace ZapicSDK
     internal interface IZapicInterface
     {
         /// <summary>
+        /// Gets or sets the callback invoked after the player has been logged in
+        /// </summary>
+        /// <remarks>
+        /// The player that has been logged in is passed to the callback.
+        /// </remarks>
+        Action<ZapicPlayer> OnLogin { get; set; }
+
+        /// <summary>
+        /// Gets or sets the callback invoked after the player has been logged out
+        /// </summary>
+        /// <remarks>
+        /// The player that has been logged out is passed to the callback.
+        /// </remarks>
+        Action<ZapicPlayer> OnLogout { get; set; }
+
+        /// <summary>
         /// Starts zapic. This should be called
         /// as soon as possible during app startup.
         /// </summary>
@@ -21,7 +37,13 @@ namespace ZapicSDK
         /// Gets the current players unique id.
         /// </summary>
         /// <returns>The unique id.</returns>
-        string PlayerId();
+        ZapicPlayer Player();
+
+        /// <summary>
+        /// Handle Zapic data. Usually from an integration like push notifications.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        void HandleData(Dictionary<string, object> data);
 
         /// <summary>
         /// Submit a new in-game event to zapic.

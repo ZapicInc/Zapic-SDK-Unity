@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Timers;
 using UnityEngine;
 
 namespace ZapicSDK
@@ -15,6 +18,44 @@ namespace ZapicSDK
         /// </summary>
         private bool _started = false;
 
+        private Action<ZapicPlayer> _loginHandler;
+
+        private Action<ZapicPlayer> _logoutHandler;
+
+        private readonly ZapicPlayer _player = new ZapicPlayer
+        {
+            PlayerId = "0000000-0000-0000-0000-000000000000",
+            NotificationToken = "AAAAAAAAABBBBBBBBBCCCCCCCCC",
+        };
+
+        public Action<ZapicPlayer> OnLogin
+        {
+            get
+            {
+                return _loginHandler;
+            }
+
+            set
+            {
+                Debug.LogFormat("Zapic:OnLogin set");
+                _loginHandler = value;
+            }
+        }
+
+        public Action<ZapicPlayer> OnLogout
+        {
+            get
+            {
+                return _logoutHandler;
+            }
+
+            set
+            {
+                Debug.LogFormat("Zapic:OnLogout set");
+                _logoutHandler = value;
+            }
+        }
+
         public void Start()
         {
             DisplayEditorWarning();
@@ -25,6 +66,17 @@ namespace ZapicSDK
                 Debug.LogError("Zapic: Please only call Zapic.Start() once.");
 
             _started = true;
+
+            var timer = new System.Timers.Timer(1000);
+
+            timer.Elapsed += new ElapsedEventHandler((s, e) =>
+            {
+                if (_loginHandler != null)
+                    _loginHandler(_player);
+
+                timer.Enabled = false;
+            });
+            timer.Enabled = true;
         }
 
         public void Show(Views view)
@@ -40,11 +92,11 @@ namespace ZapicSDK
             Debug.LogFormat("Zapic: SubmitEvent: {0}", json);
         }
 
-        public string PlayerId()
+        public ZapicPlayer Player()
         {
             CheckStarted();
-            Debug.LogFormat("Zapic:GetPlayerId");
-            return "0000000-0000-0000-0000-000000000000";
+            Debug.LogFormat("Zapic:GetPlayer");
+            return _player;
         }
 
         private void DisplayEditorWarning()
@@ -65,6 +117,11 @@ namespace ZapicSDK
                 return;
 
             Debug.LogError("Zapic: Please ensure that Zapic.Start() is called before any other Zapic methods.");
+        }
+
+        public void HandleData(Dictionary<string, object> data)
+        {
+            Debug.LogFormat("Zapic:HandleData");
         }
     }
 }
