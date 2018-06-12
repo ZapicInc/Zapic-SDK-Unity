@@ -64,16 +64,40 @@ namespace ZapicSDK
             }
         }
 
-        public void Show(Views view)
+        public void ShowDefaultPage()
         {
             using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
             using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
-            using (var viewObject = new AndroidJavaObject("java.lang.String", view.ToString().ToLower()))
             using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
-                    "show",
+                    "showDefaultPage",
+                    "(Landroid/app/Activity;Ljava/lang/String;)V");
+                var objectArray = new object[2];
+                var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
+                try
+                {
+                    argArray[0].l = gameActivityObject.GetRawObject();
+                    AndroidJNI.CallStaticVoidMethod(zapicClass.GetRawClass(), methodId, argArray);
+                }
+                finally
+                {
+                    AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
+                }
+            }
+        }
+
+        public void ShowPage(ZapicPages page)
+        {
+            using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
+            using (var viewObject = new AndroidJavaObject("java.lang.String", page.ToString().ToLower()))
+            using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
+            {
+                var methodId = AndroidJNI.GetStaticMethodID(
+                    zapicClass.GetRawClass(),
+                    "showPage",
                     "(Landroid/app/Activity;Ljava/lang/String;)V");
                 var objectArray = new object[2];
                 var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
@@ -126,7 +150,7 @@ namespace ZapicSDK
             return player;
         }
 
-        public void HandleData(Dictionary<string, object> data)
+        public void HandleInteraction(Dictionary<string, object> data)
         {
             var json = MiniJSON.Json.Serialize(data);
 
@@ -137,7 +161,7 @@ namespace ZapicSDK
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
-                    "handleData",
+                    "handleInteraction",
                     "(Landroid/app/Activity;Lorg/json/JSONObject;)V");
                 var objectArray = new object[2];
                 var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);

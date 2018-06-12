@@ -26,7 +26,7 @@ public class ExampleStartup : MonoBehaviour
 
             GetPlayer();
 
-            HandleData();
+            HandleInteraction();
         }
     }
 
@@ -53,12 +53,12 @@ public class ExampleStartup : MonoBehaviour
         }
     }
 
-    private void HandleData()
+    private void HandleInteraction()
     {
         var data = new Dictionary<string, object>()
             { { "zapic", "/challenge/00000000-0000-0000-0000-000000000000" }
             };
 
-        Zapic.HandleData(data);
+        Zapic.HandleInteraction(data);
     }
 }

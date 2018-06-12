@@ -18,13 +18,16 @@ namespace ZapicSDK
         private static extern void z_start();
 
         [DllImport("__Internal")]
-        private static extern void z_show(string viewName);
+        private static extern void z_showDefaultPage();
+
+        [DllImport("__Internal")]
+        private static extern void z_showPage(string pageName);
 
         [DllImport("__Internal")]
         private static extern void z_submitEventWithParams(string eventJson);
 
         [DllImport("__Internal")]
-        private static extern void z_handleData(string dataJson);
+        private static extern void z_handleInteraction(string dataJson);
 
         [DllImport("__Internal")]
         private static extern void z_setLoginHandler(internal_PlayerLogin loginCallback);
@@ -104,26 +107,22 @@ namespace ZapicSDK
         }
 
         /// <summary>
-        /// Shows the given zapic window
+        /// Shows the default Zapic page
         /// </summary>
-        /// <param name="view">View to show.</param>
-        public void Show(Views view)
+        public void ShowDefaultPage()
         {
-            var viewName = "";
-
-            switch (view)
-            {
-                case Views.Main:
-                    viewName = "default";
-                    break;
-
-                default:
-                    viewName = view.ToString().ToLower();
-                    break;
-            }
-
-            z_show(viewName);
+            z_showDefaultPage();
         }
+
+        /// <summary>
+        /// Shows the given Zapic page
+        /// </summary>
+        /// <param name="page">Page to show.</param>
+        public void ShowPage(ZapicPages page)
+        {
+            z_showPage(page.ToString().ToLower());
+        }
+
 
         /// <summary>
         /// Gets the current player
@@ -136,11 +135,11 @@ namespace ZapicSDK
             return player;
         }
 
-        public void HandleData(Dictionary<string, object> data)
+        public void HandleInteraction(Dictionary<string, object> data)
         {
             var json = Json.Serialize(data);
 
-            z_handleData(json);
+            z_handleInteraction(json);
         }
 
         /// <summary>
