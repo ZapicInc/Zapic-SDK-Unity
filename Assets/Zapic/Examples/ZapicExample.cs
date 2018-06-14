@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class ExampleStartup : MonoBehaviour
+public class ZapicExample : MonoBehaviour
 {
-    private void Start()
+    void Start()
     {
-        Zapic.Start();
-
         Zapic.OnLogin = ((player) =>
         {
             Debug.LogFormat("Player logged in. Id:{0}, Notification:{1}", player.PlayerId, player.NotificationToken);
@@ -16,31 +14,47 @@ public class ExampleStartup : MonoBehaviour
         {
             Debug.LogFormat("Player logged out. Id:{0}, Notification:{1}", player.PlayerId, player.NotificationToken);
         });
+
+        Zapic.Start();
     }
 
     private void Update()
     {
+        //Simulate a Zapic event on left click
         if (Input.GetMouseButtonDown(0))
         {
             SendEvent();
-
-            GetPlayer();
-
+        }
+        //Simulate HandleInteraction on right click
+        else if(Input.GetMouseButtonDown(1))
+        {
             HandleInteraction();
+        }
+        //Simulate getting current player on space bar
+        else if(Input.GetKeyDown(KeyCode.Space))
+        {
+            GetPlayer();
         }
     }
 
     private void SendEvent()
     {
-        var p = new Dictionary<string, object>()
-            { { "SCORE", 22 }, { "PARAM2", "abc" }, { "PARAM3", true }, { "PARAM4", "\"blab" }, { "PAR\"AM5", "\"blab" }
-            };
+        var eventParams = new Dictionary<string, object>();
 
-        Zapic.SubmitEvent(p);
+        //Add parameter information to the event
+        eventParams.Add("Score",22);
+        eventParams.Add("PARAM2","abc");
+        eventParams.Add("PARAM3",true);
+        eventParams.Add("PARAM4","\"blab");
+        eventParams.Add("PAR\"AM5", "\"blab" );
+
+        //Sumbit the event to the Zapic server
+        Zapic.SubmitEvent(eventParams);
     }
 
     private void GetPlayer()
     {
+        //Gets the current player
         var player = Zapic.Player();
 
         if (player == null)
@@ -49,7 +63,7 @@ public class ExampleStartup : MonoBehaviour
         }
         else
         {
-            Debug.LogFormat("Player, Id:{0}, NotifToken:{1}", player.PlayerId, player.NotificationToken);
+            Debug.LogFormat("Current Player, Id:{0}, NotificationToken:{1}", player.PlayerId, player.NotificationToken);
         }
     }
 

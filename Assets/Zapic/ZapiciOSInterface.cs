@@ -18,10 +18,10 @@ namespace ZapicSDK
         private static extern void z_start();
 
         [DllImport("__Internal")]
-        private static extern void z_showDefaultPage();
+        private static extern void z_showDefault();
 
         [DllImport("__Internal")]
-        private static extern void z_showPage(string pageName);
+        private static extern void z_show(string pageName);
 
         [DllImport("__Internal")]
         private static extern void z_submitEventWithParams(string eventJson);
@@ -111,7 +111,7 @@ namespace ZapicSDK
         /// </summary>
         public void ShowDefaultPage()
         {
-            z_showDefaultPage();
+            z_showDefault();
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace ZapicSDK
         /// <param name="page">Page to show.</param>
         public void ShowPage(ZapicPages page)
         {
-            z_showPage(page.ToString().ToLower());
+            z_show(page.ToString().ToLower());
         }
 
 

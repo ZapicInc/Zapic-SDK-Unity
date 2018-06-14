@@ -10,35 +10,10 @@ namespace ZapicSDK
 
         public Action<ZapicPlayer> OnLogout { get; set; }
 
-        public ZapicAndroidInterface()
-        {
-            _started = false;
-        }
-
         public void Start()
         {
             using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
-                using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-                using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
-                {
-                    var methodId = AndroidJNI.GetStaticMethodID(
-                        zapicClass.GetRawClass(),
-                        "attachFragment",
-                        "(Landroid/app/Activity;)V");
-                    var objectArray = new object[1];
-                    var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
-                    try
-                    {
-                        argArray[0].l = gameActivityObject.GetRawObject();
-                        AndroidJNI.CallStaticVoidMethod(zapicClass.GetRawClass(), methodId, argArray);
-                    }
-                    finally
-                    {
-                        AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
-                    }
-                }
-
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
                     "setPlayerAuthenticationHandler",
@@ -53,6 +28,26 @@ namespace ZapicSDK
                 finally
                 {
                     AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
+                }
+
+                using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
+                {
+                    methodId = AndroidJNI.GetStaticMethodID(
+                        zapicClass.GetRawClass(),
+                        "attachFragment",
+                        "(Landroid/app/Activity;)V");
+                    objectArray = new object[1];
+                    argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
+                    try
+                    {
+                        argArray[0].l = gameActivityObject.GetRawObject();
+                        AndroidJNI.CallStaticVoidMethod(zapicClass.GetRawClass(), methodId, argArray);
+                    }
+                    finally
+                    {
+                        AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
+                    }
                 }
             }
         }
