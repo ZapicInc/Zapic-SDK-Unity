@@ -12,33 +12,24 @@ namespace ZapicSDK
 
         public void Start()
         {
+            var unityPlayerClass = new AndroidJavaClass ("com.unity3d.player.UnityPlayer");
+            var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject> ("currentActivity");
+            gameActivityObject.Call("runOnUiThread", new AndroidJavaRunnable(StartOnUI));
+        }
+
+        private void StartOnUI()
+        {
             using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
-                var methodId = AndroidJNI.GetStaticMethodID(
-                    zapicClass.GetRawClass(),
-                    "setPlayerAuthenticationHandler",
-                    "(Lcom/zapic/sdk/android/ZapicPlayerAuthenticationHandler;)V");
-                var objectArray = new object[1];
-                var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
-                try
-                {
-                    argArray[0].l = AndroidJNIHelper.CreateJavaProxy(new AuthenticationHandler(this));
-                    AndroidJNI.CallStaticVoidMethod(zapicClass.GetRawClass(), methodId, argArray);
-                }
-                finally
-                {
-                    AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
-                }
-
                 using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
                 using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
                 {
-                    methodId = AndroidJNI.GetStaticMethodID(
+                    var methodId = AndroidJNI.GetStaticMethodID(
                         zapicClass.GetRawClass(),
                         "attachFragment",
                         "(Landroid/app/Activity;)V");
-                    objectArray = new object[1];
-                    argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
+                    var objectArray = new object[1];
+                    var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
                     try
                     {
                         argArray[0].l = gameActivityObject.GetRawObject();
@@ -47,6 +38,21 @@ namespace ZapicSDK
                     finally
                     {
                         AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
+                    }
+                }
+
+                {
+                    var methodId = AndroidJNI.GetStaticMethodID (
+                                       zapicClass.GetRawClass (),
+                                       "setPlayerAuthenticationHandler",
+                                       "(Lcom/zapic/sdk/android/ZapicPlayerAuthenticationHandler;)V");
+                    var objectArray = new object[1];
+                    var argArray = AndroidJNIHelper.CreateJNIArgArray (objectArray);
+                    try {
+                        argArray [0].l = AndroidJNIHelper.CreateJavaProxy (new AuthenticationHandler (this));
+                        AndroidJNI.CallStaticVoidMethod (zapicClass.GetRawClass (), methodId, argArray);
+                    } finally {
+                        AndroidJNIHelper.DeleteJNIArgArray (objectArray, argArray);
                     }
                 }
             }
