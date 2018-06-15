@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ZapicSDK
@@ -28,10 +28,15 @@ namespace ZapicSDK
         void Start();
 
         /// <summary>
-        /// Shows the given zapic window
+        /// Shows the default Zapic page
         /// </summary>
-        /// <param name="view">View to show.</param>
-        void Show(Views view);
+        void ShowDefaultPage();
+
+         /// <summary>
+        /// Shows the given Zapic page
+        /// </summary>
+        /// <param name="page">Page to show.</param>
+        void ShowPage(ZapicPages page);
 
         /// <summary>
         /// Gets the current players unique id.
@@ -43,7 +48,7 @@ namespace ZapicSDK
         /// Handle Zapic data. Usually from an integration like push notifications.
         /// </summary>
         /// <param name="data">The data.</param>
-        void HandleData(Dictionary<string, object> data);
+        void HandleInteraction(Dictionary<string, object> data);
 
         /// <summary>
         /// Submit a new in-game event to zapic.

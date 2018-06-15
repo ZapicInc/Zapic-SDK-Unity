@@ -20,6 +20,11 @@ public class ZapicButton : MonoBehaviour
 
     private void ShowZapicMenu()
     {
-        Zapic.Show(ZapicSDK.Views.Main);
+        Zapic.ShowDefaultPage();
+    }
+
+    private void ShowZapicChallengesMenu()
+    {
+        Zapic.ShowPage(ZapicPages.Challenges);
     }
 }

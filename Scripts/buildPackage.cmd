@@ -1,0 +1,1 @@
+Unity.exe -gvh_disable -batchmode -projectPath "D:\Projects\Zapic-SDK-Unity" -importPackage "D:\Projects\play-services-resolver-1.2.72.0.unitypackage" -exportPackage Assets/Zapic Assets/Plugins Assets/PlayServicesResolver Zapic.unitypackage -quit

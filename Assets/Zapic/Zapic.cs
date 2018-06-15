@@ -70,12 +70,20 @@ public static class Zapic
     }
 
     /// <summary>
-    /// Shows the given zapic window
+    /// Shows the default Zapic page
     /// </summary>
-    /// <param name="view">View to show.</param>
-    public static void Show(Views view)
+    public static void ShowDefaultPage()
     {
-        _interface.Show(view);
+        _interface.ShowDefaultPage();
+    }
+
+    /// <summary>
+    /// Shows the given Zapic page
+    /// </summary>
+    /// <param name="page">Page to show.</param>
+    public static void ShowPage(ZapicPages page)
+    {
+        _interface.ShowPage(page);
     }
 
     /// <summary>
@@ -91,9 +99,9 @@ public static class Zapic
     /// Handle Zapic data. Usually from an integration like push notifications.
     /// </summary>
     /// <param name="data">The data.</param>
-    public static void HandleData(Dictionary<string, object> data)
+    public static void HandleInteraction(Dictionary<string, object> data)
     {
-        _interface.HandleData(data);
+        _interface.HandleInteraction(data);
     }
 
     /// <summary>

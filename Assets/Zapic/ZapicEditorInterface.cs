@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Timers;
@@ -37,7 +37,7 @@ namespace ZapicSDK
 
             set
             {
-                Debug.LogFormat("Zapic:OnLogin set");
+                Debug.LogFormat("Zapic:OnLogin was set successfully");
                 _loginHandler = value;
             }
         }
@@ -51,7 +51,7 @@ namespace ZapicSDK
 
             set
             {
-                Debug.LogFormat("Zapic:OnLogout set");
+                Debug.LogFormat("Zapic:OnLogout was set successfully");
                 _logoutHandler = value;
             }
         }
@@ -79,10 +79,16 @@ namespace ZapicSDK
             timer.Enabled = true;
         }
 
-        public void Show(Views view)
+        public void ShowDefaultPage()
         {
             CheckStarted();
-            Debug.LogFormat("Zapic:Show {0}", view);
+            Debug.LogFormat("Zapic:Show Default page");
+        }
+
+        public void ShowPage(ZapicPages page)
+        {
+            CheckStarted();
+            Debug.LogFormat("Zapic:Show {0}", page);
         }
 
         public void SubmitEvent(Dictionary<string, object> param)
@@ -119,9 +125,9 @@ namespace ZapicSDK
             Debug.LogError("Zapic: Please ensure that Zapic.Start() is called before any other Zapic methods.");
         }
 
-        public void HandleData(Dictionary<string, object> data)
+        public void HandleInteraction(Dictionary<string, object> data)
         {
-            Debug.LogFormat("Zapic:HandleData");
+            Debug.LogFormat("Zapic:HandleInteraction");
         }
     }
 }
