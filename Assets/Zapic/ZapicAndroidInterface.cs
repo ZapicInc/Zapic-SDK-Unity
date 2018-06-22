@@ -6,14 +6,21 @@ namespace ZapicSDK
 {
     internal sealed class ZapicAndroidInterface : IZapicInterface
     {
+        private ZapicPlayerAuthenticationHandler _authenticationHandler;
+
+        internal ZapicAndroidInterface()
+        {
+            _authenticationHandler = null;
+        }
+
         public Action<ZapicPlayer> OnLogin { get; set; }
 
         public Action<ZapicPlayer> OnLogout { get; set; }
 
         public void Start()
         {
-            var unityPlayerClass = new AndroidJavaClass ("com.unity3d.player.UnityPlayer");
-            var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject> ("currentActivity");
+            var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity");
             gameActivityObject.Call("runOnUiThread", new AndroidJavaRunnable(StartOnUI));
         }
 
@@ -41,18 +48,23 @@ namespace ZapicSDK
                     }
                 }
 
+                if (_authenticationHandler == null)
                 {
-                    var methodId = AndroidJNI.GetStaticMethodID (
-                                       zapicClass.GetRawClass (),
-                                       "setPlayerAuthenticationHandler",
-                                       "(Lcom/zapic/sdk/android/ZapicPlayerAuthenticationHandler;)V");
+                    _authenticationHandler = new ZapicPlayerAuthenticationHandler(this);
+                    var methodId = AndroidJNI.GetStaticMethodID(
+                                        zapicClass.GetRawClass(),
+                                        "setPlayerAuthenticationHandler",
+                                        "(Lcom/zapic/sdk/android/ZapicPlayerAuthenticationHandler;)V");
                     var objectArray = new object[1];
-                    var argArray = AndroidJNIHelper.CreateJNIArgArray (objectArray);
-                    try {
-                        argArray [0].l = AndroidJNIHelper.CreateJavaProxy (new AuthenticationHandler (this));
-                        AndroidJNI.CallStaticVoidMethod (zapicClass.GetRawClass (), methodId, argArray);
-                    } finally {
-                        AndroidJNIHelper.DeleteJNIArgArray (objectArray, argArray);
+                    var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
+                    try
+                    {
+                        argArray[0].l = AndroidJNIHelper.CreateJavaProxy(_authenticationHandler);
+                        AndroidJNI.CallStaticVoidMethod(zapicClass.GetRawClass(), methodId, argArray);
+                    }
+                    finally
+                    {
+                        AndroidJNIHelper.DeleteJNIArgArray(objectArray, argArray);
                     }
                 }
             }
@@ -148,21 +160,18 @@ namespace ZapicSDK
         {
             var json = MiniJSON.Json.Serialize(data);
 
-            using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-            using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
             using (var parametersObject = new AndroidJavaObject("java.lang.String", json))
             using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
                     "handleInteraction",
-                    "(Landroid/app/Activity;Ljava/lang/String;)V");
-                var objectArray = new object[2];
+                    "(Ljava/lang/String;)V");
+                var objectArray = new object[1];
                 var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
                 try
                 {
-                    argArray[0].l = gameActivityObject.GetRawObject();
-                    argArray[1].l = parametersObject.GetRawObject();
+                    argArray[0].l = parametersObject.GetRawObject();
                     AndroidJNI.CallStaticVoidMethod(zapicClass.GetRawClass(), methodId, argArray);
                 }
                 finally
@@ -176,21 +185,18 @@ namespace ZapicSDK
         {
             var json = MiniJSON.Json.Serialize(param);
 
-            using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-            using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
             using (var parametersObject = new AndroidJavaObject("java.lang.String", json))
             using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
                     "submitEvent",
-                    "(Landroid/app/Activity;Ljava/lang/String;)V");
-                var objectArray = new object[2];
+                    "(Ljava/lang/String;)V");
+                var objectArray = new object[1];
                 var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
                 try
                 {
-                    argArray[0].l = gameActivityObject.GetRawObject();
-                    argArray[1].l = parametersObject.GetRawObject();
+                    argArray[0].l = parametersObject.GetRawObject();
                     AndroidJNI.CallStaticVoidMethod(zapicClass.GetRawClass(), methodId, argArray);
                 }
                 finally
@@ -249,11 +255,11 @@ namespace ZapicSDK
             };
         }
 
-        private sealed class AuthenticationHandler : AndroidJavaProxy, IDisposable
+        private sealed class ZapicPlayerAuthenticationHandler : AndroidJavaProxy, IDisposable
         {
             private IZapicInterface _zapicInterface;
 
-            public AuthenticationHandler(IZapicInterface zapicInterface)
+            public ZapicPlayerAuthenticationHandler(IZapicInterface zapicInterface)
                 : base("com.zapic.sdk.android.ZapicPlayerAuthenticationHandler")
             {
                 _zapicInterface = zapicInterface;
