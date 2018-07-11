@@ -80,7 +80,7 @@ namespace Zapic
 
             // Add string setting
             plist.root.SetString("NSPhotoLibraryUsageDescription", "Zapic will only use the Photos you select.");
-            plist.root.SetString("NSCameraUsageDescription", "Zapic allows your to take photos.");
+            plist.root.SetString("NSCameraUsageDescription", "Zapic allows you to take photos.");
 
             // Apply editing settings to Info.plist
             plist.WriteToFile(plistPath);
