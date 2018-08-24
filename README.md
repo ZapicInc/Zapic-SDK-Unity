@@ -20,11 +20,11 @@ Learn more about integrating the SDK and configuring your Unity game in the Zapi
 
 Ask questions on [Stack Overflow](https://stackoverflow.com/questions/ask?tags=zapic). Be sure to include the `zapic` tag with your question.
 
-Chat on [Discord](https://discord.gg/uC3k5D7).
+Chat on [Discord](https://discord.gg/Kduh53S).
 
 Follow [@ZapicInc](https://twitter.com/ZapicInc) on Twitter for important announcements.
 
-Report bugs and discuss new features on [GitHub](https://github.com/ZapicInc/Zapic-SDK-Unity/issues).
+Report bugs and discuss new features on [GitHub](https://github.com/ZapicInc/Support).
 
 ## Contributing
 
