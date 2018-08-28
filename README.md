@@ -26,12 +26,18 @@ Follow [@ZapicInc](https://twitter.com/ZapicInc) on Twitter for important announ
 
 Report bugs and discuss new features on [GitHub](https://github.com/ZapicInc/Support).
 
+## Building the .unitypackage
+
+1. First run the script to install iOS source code in `Scripts\install-ios-sdk.sh`
+
+2. Export the .unitypackage with `Scripts\buildpackage.cmd`
+
 ## Contributing
 
 We accept contributions to the Zapic SDK for Unity. Simply fork the repository and submit a pull request on [GitHub](https://github.com/ZapicInc/Zapic-SDK-Unity/pulls).
 
 ## Quick Links
 
-* [Zapic Documentation](https://www.zapic.com/docs)
-* [Zapic SDK for iOS](https://github.com/ZapicInc/Zapic-SDK-iOS)
-* [Zapic SDK for Android](https://github.com/ZapicInc/Zapic-SDK-Android)
+- [Zapic Documentation](https://www.zapic.com/docs)
+- [Zapic SDK for iOS](https://github.com/ZapicInc/Zapic-SDK-iOS)
+- [Zapic SDK for Android](https://github.com/ZapicInc/Zapic-SDK-Android)

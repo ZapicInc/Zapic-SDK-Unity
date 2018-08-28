@@ -56,3 +56,5 @@ UnityPacker\.exe
 Assets/Zapic/Plugins/Android/ZapicManifest\.plugin/AndroidManifest\.xml
 
 Assets/Zapic/Plugins/Android/ZapicManifest\.plugin/AndroidManifest\.xml\.meta
+
+Scripts/zapic-ios/
