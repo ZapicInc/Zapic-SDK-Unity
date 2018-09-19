@@ -18,7 +18,6 @@ static NSString *const PlayerQuery = @"player";
 
 static NSString *const ZPCErrorDomain = @"com.Zapic";
 static NSInteger const ZPCErrorUnavailable = 2600;
-static NSInteger const ZPCErrorClient = 2601;
 
 - (void)setIsReady:(BOOL)isReady {
     if (isReady == _isReady) {
@@ -69,7 +68,16 @@ static NSInteger const ZPCErrorClient = 2601;
 
     //If this is an error response, trigger the callback right away
     if (error) {
-        handler(nil, [NSError errorWithDomain:ZPCErrorDomain code:ZPCErrorClient userInfo:@{@"errorMsg": payload}]);
+        NSString *msg = payload[@"response"];
+        id codeObj = payload[@"code"];
+        NSError *error;
+        if (codeObj == nil) {
+            error = [NSError errorWithDomain:ZPCErrorDomain code:ZPCErrorUnavailable userInfo:@{@"errorMsg": @"Unknown error"}];
+        } else {
+            error = [NSError errorWithDomain:ZPCErrorDomain code:[codeObj intValue] userInfo:@{@"errorMsg": msg}];
+        }
+
+        handler(nil, error);
         return;
     }
 
