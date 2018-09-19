@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode.Custom;
-using UnityEditor.iOS.Xcode.Custom.Extensions;
+using UnityEditor.iOS.Xcode;
+using UnityEditor.iOS.Xcode.Extensions;
 using UnityEngine;
 
 namespace Zapic
@@ -37,7 +37,9 @@ namespace Zapic
             string targetGuid = proj.TargetGuidByName(PBXProject.GetUnityTargetName());
 
             //Enable modules so @import can be used to resolve frameworks
-            proj.AddBuildProperty(targetGuid, "CLANG_ENABLE_MODULES", "YES");
+            proj.SetBuildProperty(targetGuid, "CLANG_ENABLE_MODULES", "YES");
+
+            File.WriteAllText(projPath, proj.WriteToString());
 
             Debug.Log("Done with Zapic Xcode Build Scripts");
         }

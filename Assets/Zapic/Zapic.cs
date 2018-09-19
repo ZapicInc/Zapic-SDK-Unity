@@ -90,9 +90,11 @@ public static class Zapic
     /// Gets the current player.
     /// </summary>
     /// <returns>The player</returns>
+    [Obsolete("User GetPlayer() instead")]
     public static ZapicPlayer Player()
     {
-        return _interface.Player();
+        //TODO: How do we want to do this?
+        return null;
     }
 
     /// <summary>
@@ -111,5 +113,41 @@ public static class Zapic
     public static void SubmitEvent(Dictionary<string, object> param)
     {
         _interface.SubmitEvent(param);
+    }
+
+    /// <summary>
+    /// Gets the current competitions
+    /// </summary>
+    /// <param name="callback">Callback with either the competitions or an error</param>
+    public static void GetCompetitions(Action<ZapicCompetition[], ZapicError> callback)
+    {
+        _interface.GetCompetitions(callback);
+    }
+
+    /// <summary>
+    /// Gets the current statistics
+    /// </summary>
+    /// <param name="callback">Callback with either the statistics or an error</param>
+    public static void GetStatistics(Action<ZapicStatistic[], ZapicError> callback)
+    {
+        _interface.GetStatistics(callback);
+    }
+
+    /// <summary>
+    /// Gets the current challenges
+    /// </summary>
+    /// <param name="callback">Callback with either the challenges or an error</param>
+    public static void GetChallenges(Action<ZapicChallenge[], ZapicError> callback)
+    {
+        _interface.GetChallenges(callback);
+    }
+
+    /// <summary>
+    /// Gets the current player
+    /// </summary>
+    /// <param name="callback">Callback with either the challenges or an error</param>
+    public static void GetPlayer(Action<ZapicPlayer, ZapicError> callback)
+    {
+        _interface.GetPlayer(callback);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Timers;
 using UnityEngine;
+using ZapicSDK.MiniJSON;
 
 namespace ZapicSDK
 {
@@ -22,11 +23,13 @@ namespace ZapicSDK
 
         private Action<ZapicPlayer> _logoutHandler;
 
-        private readonly ZapicPlayer _player = new ZapicPlayer
-        {
-            PlayerId = "0000000-0000-0000-0000-000000000000",
-            NotificationToken = "AAAAAAAAABBBBBBBBBCCCCCCCCC",
-        };
+        private readonly ZapicPlayer _player = new ZapicPlayer("0000000-0000-0000-0000-000000000000", "Test User", new Uri("https://randomuser.me/api/portraits/men/3.jpg"), "AAAAAAAAABBBBBBBBBCCCCCCCCC");
+
+        private readonly ZapicStatistic[] _stats;
+
+        private readonly ZapicChallenge[] _challenges;
+
+        private readonly ZapicCompetition[] _competitions;
 
         public Action<ZapicPlayer> OnLogin
         {
@@ -56,6 +59,27 @@ namespace ZapicSDK
             }
         }
 
+        public ZapicEditorInterface()
+        {
+            _stats = new []
+            {
+                new ZapicStatistic(Guid.NewGuid().ToString(), "Stat1", "1,234", 1234, .90, 8),
+                new ZapicStatistic(Guid.NewGuid().ToString(), "Stat2", "567.8", 567.8, .1, null),
+            };
+
+            _challenges = new []
+            {
+                new ZapicChallenge(Guid.NewGuid().ToString(), "Challenge 1", true, "Win!", DateTime.UtcNow.AddHours(-10), DateTime.UtcNow.AddHours(5), "1,234", 1234, "level1", ZapicChallengeStatus.Accepted, 4, 15),
+                new ZapicChallenge(Guid.NewGuid().ToString(), "Challenge 2", true, "Win!", DateTime.UtcNow.AddHours(-15), DateTime.UtcNow.AddHours(15), null, null, "level1", ZapicChallengeStatus.Invited, null, null)
+
+            };
+
+            _competitions = new []
+            {
+                new ZapicCompetition(Guid.NewGuid().ToString(), "Competition 1", "Beat everyone else", "Zone2", true, DateTime.UtcNow.AddHours(-10), DateTime.UtcNow.AddHours(5), 10234, ZapicCompetitionStatus.Accepted, "467", 467, null, 3),
+            };
+        }
+
         public void Start()
         {
             DisplayEditorWarning();
@@ -71,12 +95,13 @@ namespace ZapicSDK
 
             timer.Elapsed += new ElapsedEventHandler((s, e) =>
             {
+                ((System.Timers.Timer) s).Stop(); //s is the Timer
+
                 if (_loginHandler != null)
                     _loginHandler(_player);
-
-                timer.Enabled = false;
             });
             timer.Enabled = true;
+
         }
 
         public void ShowDefaultPage()
@@ -128,6 +153,26 @@ namespace ZapicSDK
         public void HandleInteraction(Dictionary<string, object> data)
         {
             Debug.LogFormat("Zapic:HandleInteraction");
+        }
+
+        public void GetCompetitions(Action<ZapicCompetition[], ZapicError> callback)
+        {
+            callback(_competitions, null);
+        }
+
+        public void GetStatistics(Action<ZapicStatistic[], ZapicError> callback)
+        {
+            callback(_stats, null);
+        }
+
+        public void GetChallenges(Action<ZapicChallenge[], ZapicError> callback)
+        {
+            callback(_challenges, null);
+        }
+
+        public void GetPlayer(Action<ZapicPlayer, ZapicError> callback)
+        {
+            callback(_player, null);
         }
     }
 }

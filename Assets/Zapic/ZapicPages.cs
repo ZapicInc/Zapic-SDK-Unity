@@ -11,4 +11,10 @@
 
     /// The page with stats
     Stats,
+
+    /// The competition page
+    Competitions,
+
+    // The login page
+    Login,
 }

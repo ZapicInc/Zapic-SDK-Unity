@@ -7,12 +7,60 @@ public class ZapicExample : MonoBehaviour
     {
         Zapic.OnLogin = ((player) =>
         {
-            Debug.LogFormat("Player logged in. Id:{0}, Notification:{1}", player.PlayerId, player.NotificationToken);
+            Debug.LogFormat("Player logged in. Id:{0}, Name: {1}, Icon:{2}, Notification:{3}", player.Id, player.Name, player.IconUrl, player.NotificationToken);
+
+            Zapic.GetCompetitions((competitions, error) =>
+            {
+                if (error != null)
+                {
+                    Debug.LogError("Error getting competitions: " + error.Message);
+                }
+                else
+                {
+                    Debug.LogFormat("Received {0} competitions!", competitions.Length);
+                }
+            });
+
+            Zapic.GetChallenges((challenges, error) =>
+            {
+                if (error != null)
+                {
+                    Debug.LogError("Error getting challenges: " + error.Message);
+                }
+                else
+                {
+                    Debug.LogFormat("Received {0} challenges!", challenges.Length);
+                }
+            });
+
+            Zapic.GetStatistics((stats, error) =>
+            {
+                if (error != null)
+                {
+                    Debug.LogError("Error getting statistics: " + error.Message);
+                }
+                else
+                {
+                    Debug.LogFormat("Received {0} statistics!", stats.Length);
+                }
+            });
+
+            Zapic.GetPlayer((p, error) =>
+            {
+                if (error != null)
+                {
+                    Debug.LogError("Error getting player: " + error.Message);
+                }
+                else
+                {
+                    Debug.LogFormat("Received the player");
+                }
+            });
         });
 
         Zapic.OnLogout = ((player) =>
         {
-            Debug.LogFormat("Player logged out. Id:{0}, Notification:{1}", player.PlayerId, player.NotificationToken);
+            Debug.LogFormat("Player logged in. Id:{0}, Name: {1}", player.Id, player.Name);
         });
 
         Zapic.Start();
@@ -26,12 +74,12 @@ public class ZapicExample : MonoBehaviour
             SendEvent();
         }
         //Simulate HandleInteraction on right click
-        else if(Input.GetMouseButtonDown(1))
+        else if (Input.GetMouseButtonDown(1))
         {
             HandleInteraction();
         }
         //Simulate getting current player on space bar
-        else if(Input.GetKeyDown(KeyCode.Space))
+        else if (Input.GetKeyDown(KeyCode.Space))
         {
             GetPlayer();
         }
@@ -42,11 +90,11 @@ public class ZapicExample : MonoBehaviour
         var eventParams = new Dictionary<string, object>();
 
         //Add parameter information to the event
-        eventParams.Add("Score",22);
-        eventParams.Add("PARAM2","abc");
-        eventParams.Add("PARAM3",true);
-        eventParams.Add("PARAM4","\"blab");
-        eventParams.Add("PAR\"AM5", "\"blab" );
+        eventParams.Add("Score", 22);
+        eventParams.Add("PARAM2", "abc");
+        eventParams.Add("PARAM3", true);
+        eventParams.Add("PARAM4", "\"blab");
+        eventParams.Add("PAR\"AM5", "\"blab");
 
         //Sumbit the event to the Zapic server
         Zapic.SubmitEvent(eventParams);
@@ -57,14 +105,7 @@ public class ZapicExample : MonoBehaviour
         //Gets the current player
         var player = Zapic.Player();
 
-        if (player == null)
-        {
-            Debug.Log("Player is null");
-        }
-        else
-        {
-            Debug.LogFormat("Current Player, Id:{0}, NotificationToken:{1}", player.PlayerId, player.NotificationToken);
-        }
+        Debug.LogFormat("Current Player, Id:{0}, Name:{1}", player.Id, player.Name);
     }
 
     private void HandleInteraction()
