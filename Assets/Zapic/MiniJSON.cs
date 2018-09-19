@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MiniJSON
+namespace ZapicSDK.MiniJSON
 {
     // Example usage:
     //
@@ -115,18 +115,18 @@ namespace MiniJSON
                 TRUE,
                 FALSE,
                 NULL
-            };
+                };
 
-            StringReader json;
+                StringReader json;
 
-            Parser(string jsonString)
-            {
+                Parser(string jsonString)
+                {
                 json = new StringReader(jsonString);
             }
 
             public static object Parse(string jsonString)
             {
-                using (var instance = new Parser(jsonString))
+                using(var instance = new Parser(jsonString))
                 {
                     return instance.ParseValue();
                 }
@@ -303,7 +303,7 @@ namespace MiniJSON
                                         hex[i] = NextChar;
                                     }
 
-                                    s.Append((char)Convert.ToInt32(new string(hex), 16));
+                                    s.Append((char) Convert.ToInt32(new string(hex), 16));
                                     break;
                             }
                             break;
@@ -484,7 +484,7 @@ namespace MiniJSON
                 }
                 else if (value is bool)
                 {
-                    builder.Append((bool)value ? "true" : "false");
+                    builder.Append((bool) value ? "true" : "false");
                 }
                 else if ((asList = value as IList) != null)
                 {
@@ -496,7 +496,7 @@ namespace MiniJSON
                 }
                 else if (value is char)
                 {
-                    SerializeString(new string((char)value, 1));
+                    SerializeString(new string((char) value, 1));
                 }
                 else
                 {
@@ -604,21 +604,21 @@ namespace MiniJSON
                 // Previously floats and doubles lost precision too.
                 if (value is float)
                 {
-                    builder.Append(((float)value).ToString("R"));
+                    builder.Append(((float) value).ToString("R"));
                 }
-                else if (value is int
-                  || value is uint
-                  || value is long
-                  || value is sbyte
-                  || value is byte
-                  || value is short
-                  || value is ushort
-                  || value is ulong)
+                else if (value is int ||
+                    value is uint ||
+                    value is long ||
+                    value is sbyte ||
+                    value is byte ||
+                    value is short ||
+                    value is ushort ||
+                    value is ulong)
                 {
                     builder.Append(value);
                 }
-                else if (value is double
-                  || value is decimal)
+                else if (value is double ||
+                    value is decimal)
                 {
                     builder.Append(Convert.ToDouble(value).ToString("R"));
                 }

@@ -41,12 +41,6 @@ Carthage/
 
 \.vscode/
 
-Assets/Plugins/iOS/
-
-Assets/Plugins/
-
-Assets/Plugins\.meta
-
 unity\.log
 
 ICSharpCode\.SharpZipLib\.dll
@@ -56,3 +50,5 @@ UnityPacker\.exe
 Assets/Zapic/Plugins/Android/ZapicManifest\.plugin/AndroidManifest\.xml
 
 Assets/Zapic/Plugins/Android/ZapicManifest\.plugin/AndroidManifest\.xml\.meta
+
+Scripts/zapic-ios/

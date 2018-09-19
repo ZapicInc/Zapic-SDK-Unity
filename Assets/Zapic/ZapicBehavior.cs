@@ -6,15 +6,17 @@ using UnityEngine;
 /// A MonoBehavior that can be attached to any GameObject to initialize Zapic.
 /// This provides a template of how to call Zapic from within your game.
 /// </summary>
-public class ZapicBehavior : MonoBehaviour {
-	void Start () {
+public class ZapicBehavior : MonoBehaviour
+{
+    void Start()
+    {
 
-        //TODO: Uncomment these lines if you want to be notified
+        //Uncomment these lines if you want to be notified
         //when the player logs in/out
 
-		// Zapic.OnLogin = ((player) =>
+        // Zapic.OnLogin = ((player) =>
         // {
-		// 	//Do stuff here
+        // 	//Do stuff here
         // });
 
         // Zapic.OnLogout = ((player) =>
@@ -23,17 +25,17 @@ public class ZapicBehavior : MonoBehaviour {
         // });
 
         Zapic.Start();
-	}
+    }
 
-	/// <summary>
-	/// Shows the default Zapic page
-	/// </summary>
-	public void ShowZapicDefaultPage()
+    /// <summary>
+    /// Shows the default Zapic page
+    /// </summary>
+    public void ShowZapicDefaultPage()
     {
         Zapic.ShowDefaultPage();
     }
 
-    ///TODO: Replace XXX with the specific page you want to show
+    /// Replace XXX with the specific page you want to show
     // public void ShowZapicXXXPage()
     // {
     //     Zapic.ShowPage(ZapicPages.XXX);
