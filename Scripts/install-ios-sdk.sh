@@ -8,7 +8,6 @@ echo ""
 echo "===================================="
 echo "      Copying iOS source files      "
 echo "===================================="
-echo "           "$iOS_PLUGIN"            "
 echo ""
 
 #Repo to clone
@@ -34,3 +33,9 @@ cp -r $iOS_REPO/Zapic/. $iOS_PLUGIN/
 
 #Remove the repo    
 rm -rf $iOS_REPO
+
+echo ""
+echo "===================================="
+echo "               Done!                "
+echo "===================================="
+echo ""
