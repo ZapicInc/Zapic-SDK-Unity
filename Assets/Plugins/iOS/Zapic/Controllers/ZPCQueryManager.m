@@ -68,7 +68,7 @@ static NSInteger const ZPCErrorUnavailable = 2600;
 
     //If this is an error response, trigger the callback right away
     if (error) {
-        NSString *msg = payload[@"response"];
+        NSString *msg = payload[@"errorMessage"];
         id codeObj = payload[@"code"];
         NSError *error;
         if (codeObj == nil) {
