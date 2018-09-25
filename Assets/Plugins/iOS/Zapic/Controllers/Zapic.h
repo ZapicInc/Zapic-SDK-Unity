@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import "ZPCChallenge.h"
 #import "ZPCCompetition.h"
+#import "ZPCErrors.h"
 #import "ZPCPlayer.h"
 #import "ZPCStatistic.h"
 
