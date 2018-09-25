@@ -1,4 +1,5 @@
 #import "ZPCQueryManager.h"
+#import "ZPCErrors.h"
 #import "ZPCLog.h"
 
 typedef void (^ResponseBlock)(id response, NSError *error);
@@ -17,7 +18,6 @@ static NSString *const ChallengeQuery = @"challenges";
 static NSString *const PlayerQuery = @"player";
 
 static NSString *const ZPCErrorDomain = @"com.Zapic";
-static NSInteger const ZPCErrorUnavailable = 2600;
 
 - (void)setIsReady:(BOOL)isReady {
     if (isReady == _isReady) {
@@ -69,10 +69,10 @@ static NSInteger const ZPCErrorUnavailable = 2600;
     //If this is an error response, trigger the callback right away
     if (error) {
         NSString *msg = payload[@"errorMessage"];
-        id codeObj = payload[@"code"];
+        id codeObj = payload[@"errorCode"];
         NSError *error;
         if (codeObj == nil) {
-            error = [NSError errorWithDomain:ZPCErrorDomain code:ZPCErrorUnavailable userInfo:@{@"errorMsg": @"Unknown error"}];
+            error = [NSError errorWithDomain:ZPCErrorDomain code:ZPCFailedToStartError userInfo:@{@"errorMsg": @"Unknown error"}];
         } else {
             error = [NSError errorWithDomain:ZPCErrorDomain code:[codeObj intValue] userInfo:@{@"errorMsg": msg}];
         }
@@ -102,7 +102,7 @@ static NSInteger const ZPCErrorUnavailable = 2600;
     //If requests cant be processed now, cancel immediately
     if (!_isReady) {
         NSError *error = [NSError errorWithDomain:ZPCErrorDomain
-                                             code:ZPCErrorUnavailable
+                                             code:ZPCFailedToStartError
                                          userInfo:nil];
 
         completionHandler(nil, error);
@@ -129,7 +129,7 @@ static NSInteger const ZPCErrorUnavailable = 2600;
 - (void)failAllQueries {
     for (NSString *requestId in _requests) {
         NSError *error = [NSError errorWithDomain:ZPCErrorDomain
-                                             code:ZPCErrorUnavailable
+                                             code:ZPCFailedToStartError
                                          userInfo:nil];
 
         //Gets the handler
