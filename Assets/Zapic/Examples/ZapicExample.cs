@@ -3,29 +3,26 @@ using UnityEngine;
 
 public class ZapicExample : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
-        Zapic.OnLogin = ((player) =>
+        // Register to receive notifications when the current player has logged in. Use this notification to load any
+        // state or data to be shown to the player.
+        Zapic.OnLogin = (player) =>
         {
-            Debug.LogFormat("Player logged in. Id:{0}, Name: {1}, Icon:{2}, Notification:{3}", player.Id, player.Name, player.IconUrl, player.NotificationToken);
-
-            Zapic.GetCompetitions((competitions, error) =>
-            {
-                if (error != null)
-                {
-                    Debug.LogError("Error getting competitions: " + error.Message);
-                }
-                else
-                {
-                    Debug.LogFormat("Received {0} competitions!", competitions.Length);
-                }
-            });
+            Debug.LogFormat(
+                "Received player logged in event! Player ID: {0}, Player Name: {1}, Player Icon URL: {2}",
+                player.Id,
+                player.Name,
+                player.IconUrl);
 
             Zapic.GetChallenges((challenges, error) =>
             {
                 if (error != null)
                 {
-                    Debug.LogError("Error getting challenges: " + error.Message);
+                    Debug.LogErrorFormat(
+                        "An error occurred getting the list of challenges for the current player: {0}, {1}",
+                        error.Code,
+                        error.Message);
                 }
                 else
                 {
@@ -33,87 +30,114 @@ public class ZapicExample : MonoBehaviour
                 }
             });
 
+            Zapic.GetCompetitions((competitions, error) =>
+            {
+                if (error != null)
+                {
+                    Debug.LogErrorFormat(
+                        "An error occurred getting the list of competitions for the current player: {0}, {1}",
+                        error.Code,
+                        error.Message);
+                }
+                else
+                {
+                    Debug.LogFormat("Received {0} competitions!", competitions.Length);
+                }
+            });
+
             Zapic.GetStatistics((stats, error) =>
             {
                 if (error != null)
                 {
-                    Debug.LogError("Error getting statistics: " + error.Message);
+                    Debug.LogErrorFormat(
+                        "An error occurred getting the list of statistics for the current player: {0}, {1}",
+                        error.Code,
+                        error.Message);
                 }
                 else
                 {
                     Debug.LogFormat("Received {0} statistics!", stats.Length);
                 }
             });
+        };
 
-            Zapic.GetPlayer((p, error) =>
-            {
-                if (error != null)
-                {
-                    Debug.LogError("Error getting player: " + error.Message);
-                }
-                else
-                {
-                    Debug.LogFormat("Received the player");
-                }
-            });
-        });
-
-        Zapic.OnLogout = ((player) =>
+        // Register to receive notifications when the current player has logged out. Use this notification to reset any
+        // state or data that shouldn't be shown to a new player.
+        Zapic.OnLogout = (player) =>
         {
-            Debug.LogFormat("Player logged in. Id:{0}, Name: {1}", player.Id, player.Name);
-        });
+            Debug.LogFormat("Received player logged out event! Player ID: {0}", player.Id);
+        };
 
+        // Start Zapic.
         Zapic.Start();
     }
 
     private void Update()
     {
-        //Simulate a Zapic event on left click
+        // Simulate a Zapic gameplay event on left click.
         if (Input.GetMouseButtonDown(0))
         {
             SendEvent();
         }
-        //Simulate HandleInteraction on right click
+
+        // Simulate a Zapic interaction event on right click.
         else if (Input.GetMouseButtonDown(1))
         {
             HandleInteraction();
         }
-        //Simulate getting current player on space bar
+
+        // Simulate getting the current Zapic player on space bar.
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             GetPlayer();
         }
     }
 
-    private void SendEvent()
-    {
-        var eventParams = new Dictionary<string, object>();
-
-        //Add parameter information to the event
-        eventParams.Add("Score", 22);
-        eventParams.Add("PARAM2", "abc");
-        eventParams.Add("PARAM3", true);
-        eventParams.Add("PARAM4", "\"blab");
-        eventParams.Add("PAR\"AM5", "\"blab");
-
-        //Sumbit the event to the Zapic server
-        Zapic.SubmitEvent(eventParams);
-    }
-
     private void GetPlayer()
     {
-        //Gets the current player
-        var player = Zapic.Player();
-
-        Debug.LogFormat("Current Player, Id:{0}, Name:{1}", player.Id, player.Name);
+        // Gets the current player. The result may be null if the current player has not logged in!
+        Zapic.GetPlayer((result, error) =>
+        {
+            if (error != null)
+            {
+                Debug.LogErrorFormat(
+                    "An error occurred getting the current player: {0}, {1}",
+                    error.Code,
+                    error.Message);
+            }
+            else
+            {
+                Debug.LogFormat(
+                    "Received player! Player ID: {0}, Player Name: {1}, Player Icon URL: {2}",
+                    result.Id,
+                    result.Name,
+                    result.IconUrl);
+            }
+        });
     }
 
     private void HandleInteraction()
     {
-        var data = new Dictionary<string, object>()
-            { { "zapic", "/challenge/00000000-0000-0000-0000-000000000000" }
-            };
+        // Interaction events are triggered by additional integrations (app links, push notifications, banner
+        // notifications, etc.). Interaction events usually display Zapic in response to a player action (opening an
+        // invitation, acknowledging a notification, etc.).
 
-        Zapic.HandleInteraction(data);
+        // The following code simulates an interaction event and exists for demonstration purposes only. Interaction
+        // events should never be created manually! (The semantics of the following code can change without notice!)
+        Zapic.HandleInteraction(new Dictionary<string, object>()
+        {
+            { "zapic", "/challenge/00000000-0000-0000-0000-000000000000" }
+        });
+    }
+
+    private void SendEvent()
+    {
+        // Parameters have string keys and boolean, number, or string values.
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("SCORE", 22);
+        parameters.Add("LEVEL", 2);
+        parameters.Add("CHARACTER", "Santa");
+        parameters.Add("CRASHED", false);
+        Zapic.SubmitEvent(parameters);
     }
 }
