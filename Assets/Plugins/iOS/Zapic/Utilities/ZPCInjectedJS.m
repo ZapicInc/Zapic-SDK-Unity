@@ -14,7 +14,7 @@
     NSString *deviceId = UIDevice.currentDevice.identifierForVendor.UUIDString;
     NSString *iosVersion = UIDevice.currentDevice.systemVersion;
     NSString *installId = [self installId];
-    const int sdkApiVersion = 3;
+    const int sdkApiVersion = 4;
     const int loadTimeout = 10000;
 
     NSString *adId = @"";

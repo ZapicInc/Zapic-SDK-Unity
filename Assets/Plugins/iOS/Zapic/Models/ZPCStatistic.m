@@ -6,9 +6,9 @@
     if (self = [super init]) {
         _identifier = data[@"id"];
         _title = data[@"title"];
+        _metadata = data[@"metadata"];
         _formattedScore = data[@"formattedScore"];
         _score = data[@"score"];
-        _rank = data[@"rank"];
         _percentile = data[@"percentile"];
     }
     return self;

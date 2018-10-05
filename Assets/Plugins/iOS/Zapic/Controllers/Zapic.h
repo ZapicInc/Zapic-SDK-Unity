@@ -39,6 +39,12 @@ extern NSString *const ZPCPageStats;
  */
 @property (class, nonatomic, copy, nullable) void (^logoutHandler)(ZPCPlayer *);
 
+/**
+ Gets the current player. nil if the player is not logged in.
+ Deprecated in favor of getPlayer:, this will be removed in a future version.
+ */
+@property (class, nonatomic, copy, nullable, readonly) ZPCPlayer *player DEPRECATED_MSG_ATTRIBUTE("Please use getPlayer:");
+
 #pragma mark - Zapic Methods
 
 /**

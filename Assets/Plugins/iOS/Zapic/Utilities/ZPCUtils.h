@@ -8,4 +8,5 @@
 + (NSString *)toIsoDate:(NSDate *)date;
 + (NSDate *)parseDateIso:(NSString *)dateString;
 + (void)cleanDictionary:(NSDictionary *)dict;
++ (int)notchSize;
 @end

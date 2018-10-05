@@ -16,15 +16,9 @@ static CGFloat const animationDuration = 0.4;
 
 - (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle image:(UIImage *)image {
     if (self = [super initWithFrame:CGRectZero]) {
-        int screenHeight = (int)[UIScreen mainScreen].nativeBounds.size.height;
+        _topPadding = [ZPCUtils notchSize];
 
-        //Check if iPhone X
-        if (screenHeight == 2436) {
-            if (@available(iOS 11.0, *)) {
-                UIWindow *window = UIApplication.sharedApplication.keyWindow;
-                _topPadding = window.safeAreaInsets.top;
-            }
-        } else if (![UIApplication sharedApplication].isStatusBarHidden) {
+        if (![UIApplication sharedApplication].isStatusBarHidden) {
             _topPadding = [UIApplication sharedApplication].statusBarFrame.size.height;
         }
 

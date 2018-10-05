@@ -69,4 +69,13 @@
     }
 }
 
++ (int)notchSize {
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        return window.safeAreaInsets.top;
+    } else {
+        return 0;
+    }
+}
+
 @end

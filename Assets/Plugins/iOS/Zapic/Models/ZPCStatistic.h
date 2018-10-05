@@ -12,6 +12,11 @@
 @property (nullable, readonly) NSString *title;
 
 /**
+ The developer defined metadata for this statistic.
+ */
+@property (nullable, readonly) NSString *metadata;
+
+/**
  The current player's score, formatted as defined in the portal.
  */
 @property (nullable, readonly) NSString *formattedScore;
@@ -25,12 +30,6 @@
  The current player's percentile rank
  */
 @property (nullable, readonly) NSNumber *percentile;
-
-/**
- The player's rank on the leaderboard (ex. Top 100). If the player
- is not on the leaderboard this value will be nil.
- */
-@property (nullable, readonly) NSNumber *rank;
 
 /**
  Initialize a new statistic with json data

@@ -55,6 +55,10 @@ NSString *const ZPCPageStats = @"stats";
     }
 }
 
++ (ZPCPlayer *)player {
+    return _core.playerManager.player;
+}
+
 #pragma mark - Zapic Methods
 
 + (void)start {
