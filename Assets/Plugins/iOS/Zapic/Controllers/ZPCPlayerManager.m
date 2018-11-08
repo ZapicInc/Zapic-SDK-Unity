@@ -1,7 +1,6 @@
 #import "ZPCPlayerManager.h"
 
 @interface ZPCPlayerManager ()
-@property ZPCPlayer *player;
 @property (nonatomic, strong) NSMutableArray<void (^)(ZPCPlayer *)> *loginHandlers;
 @property (nonatomic, strong) NSMutableArray<void (^)(ZPCPlayer *)> *logoutHandlers;
 @end

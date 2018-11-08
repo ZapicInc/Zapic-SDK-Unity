@@ -21,7 +21,6 @@ typedef struct
   BOOL active;
   char* start;
   char* end;
-  BOOL hasTotalUsers;
   int totalUsers;
   int status;
   char* formattedScore;
@@ -42,7 +41,6 @@ typedef struct
   char* metadata;
   char* start;
   char* end;
-  BOOL hasTotalUsers;
   int totalUsers;
   int status;
   char* formattedScore;
@@ -56,13 +54,12 @@ typedef struct
 {
   char* identifier;
   char* title;
+  char* metadata;
   char* formattedScore;
   BOOL hasScore;
   double score;
-  BOOL hasRank;
-  int rank;
   BOOL hasPercentile;
-  float percentile;
+  int percentile;
 } ZPCUStatistic;
 
 typedef struct
@@ -136,7 +133,6 @@ ZPCUCompetition toUnityCompetition(ZPCCompetition *c){
   competition.active = c.active;
   competition.start = toCString([ZPCUtils toIsoDate:c.start]);
   competition.end = toCString([ZPCUtils toIsoDate:c.end]);
-  competition.hasTotalUsers = hasValue(c.totalUsers);
   competition.totalUsers = [c.totalUsers intValue];
   competition.status = (int)c.status;
   competition.formattedScore = toCString(c.formattedScore);
@@ -158,7 +154,6 @@ ZPCUChallenge toUnityChallenge(ZPCChallenge *c){
   challenge.active = c.active;
   challenge.start = toCString([ZPCUtils toIsoDate:c.start]);
   challenge.end =toCString([ZPCUtils toIsoDate:c.end]);
-  challenge.hasTotalUsers = hasValue(c.totalUsers);
   challenge.totalUsers = [c.totalUsers intValue];
   challenge.status = (int)c.status;
   challenge.formattedScore = toCString(c.formattedScore);
@@ -173,11 +168,10 @@ ZPCUStatistic toUnityStatistic(ZPCStatistic *c){
   ZPCUStatistic statistic;
   statistic.identifier = toCString(c.identifier);
   statistic.title=toCString(c.title);
+  statistic.metadata = toCString(c.metadata);
   statistic.formattedScore=toCString(c.formattedScore);
   statistic.hasScore = hasValue(c.score);
   statistic.score = [c.score doubleValue];
-  statistic.hasRank = hasValue(c.rank);
-  statistic.rank = [c.rank intValue];
   statistic.hasPercentile = hasValue(c.percentile);
   statistic.percentile = [c.percentile floatValue];
   return statistic;
