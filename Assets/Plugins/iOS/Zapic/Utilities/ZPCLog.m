@@ -2,8 +2,6 @@
 
 @implementation ZPCLog
 
-bool isEnabled = true;
-
 + (void)error:(NSString *)message, ... NS_FORMAT_FUNCTION(1, 2) {
     va_list args;
     va_start(args, message);
@@ -38,8 +36,6 @@ bool isEnabled = true;
 }
 
 + (void)writeLog:(NSString *)message withSymbol:(NSString *)symbol {
-    if (!isEnabled)
-        return;
 
     NSLog(@"[Zapic][%@]-%@", symbol, message);
 }
