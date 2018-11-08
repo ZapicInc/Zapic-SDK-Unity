@@ -6,56 +6,60 @@ using MiniJSON;
 
 namespace ZapicSDK
 {
+    internal struct ZPCUPlayer
+    {
+        public string id;
+
+        public string notificationToken;
+    }
+
     internal sealed class ZapiciOSInterface : IZapicInterface
     {
-        private delegate void internal_PlayerLogin(string playerJson);
+        private delegate void internal_PlayerLogin(ZPCUPlayer player);
 
-        private delegate void internal_PlayerLogout(string playerJson);
+        private delegate void internal_PlayerLogout(ZPCUPlayer player);
 
         #region DLLImports
 
         [DllImport("__Internal")]
-        private static extern void z_start();
+        private static extern void zpc_start();
 
         [DllImport("__Internal")]
-        private static extern void z_showDefault();
+        private static extern void zpc_showDefault();
 
         [DllImport("__Internal")]
-        private static extern void z_show(string pageName);
+        private static extern void zpc_show(string pageName);
 
         [DllImport("__Internal")]
-        private static extern void z_submitEventWithParams(string eventJson);
+        private static extern void zpc_submitEventWithParams(string eventJson);
 
         [DllImport("__Internal")]
-        private static extern void z_handleInteraction(string dataJson);
+        private static extern void zpc_handleInteraction(string dataJson);
 
         [DllImport("__Internal")]
-        private static extern void z_setLoginHandler(internal_PlayerLogin loginCallback);
+        private static extern void zpc_setLoginHandler(internal_PlayerLogin loginCallback);
 
         [DllImport("__Internal")]
-        private static extern void z_setLogoutHandler(internal_PlayerLogin logoutCallback);
+        private static extern void zpc_setLogoutHandler(internal_PlayerLogin logoutCallback);
 
         [DllImport("__Internal")]
-        private static extern string z_player();
+        private static extern ZPCUPlayer zpc_player();
 
         [MonoPInvokeCallback(typeof(internal_PlayerLogin))]
-        private static void _player_login(string playerJson)
+        private static void _player_login(ZPCUPlayer p)
         {
             if (_loginHandler == null)
                 return;
 
-            var player = DeserializePlayer(playerJson);
-            _loginHandler(player);
+            _loginHandler(p.ToPlayer());
         }
 
         [MonoPInvokeCallback(typeof(internal_PlayerLogout))]
-        private static void _player_logout(string playerJson)
+        private static void _player_logout(ZPCUPlayer p)
         {
             if (_logoutHandler == null)
                 return;
-
-            var player = DeserializePlayer(playerJson);
-            _logoutHandler(player);
+            _logoutHandler(p.ToPlayer());
         }
 
         #endregion DLLImports
@@ -66,8 +70,8 @@ namespace ZapicSDK
 
         public ZapiciOSInterface()
         {
-            z_setLoginHandler(_player_login);
-            z_setLogoutHandler(_player_logout);
+            zpc_setLoginHandler(_player_login);
+            zpc_setLogoutHandler(_player_logout);
         }
 
         public Action<ZapicPlayer> OnLogin
@@ -103,7 +107,7 @@ namespace ZapicSDK
         /// <param name="version">App version id.</param>
         public void Start()
         {
-            z_start();
+            zpc_start();
         }
 
         /// <summary>
@@ -111,18 +115,17 @@ namespace ZapicSDK
         /// </summary>
         public void ShowDefaultPage()
         {
-            z_showDefault();
+            zpc_showDefault();
         }
 
         /// <summary>
         /// Shows the given Zapic page
         /// </summary>
         /// <param name="page">Page to show.</param>
-        public void ShowPage(ZapicPages page)
+        public void ShowPage(string page)
         {
-            z_show(page.ToString().ToLower());
+            zpc_show(page.ToLower());
         }
-
 
         /// <summary>
         /// Gets the current player
@@ -130,16 +133,15 @@ namespace ZapicSDK
         /// <returns>The player.</returns>
         public ZapicPlayer Player()
         {
-            var playerJson = z_player();
-            var player = DeserializePlayer(playerJson);
-            return player;
+            var p = zpc_player();
+            return p.ToPlayer();
         }
 
         public void HandleInteraction(Dictionary<string, object> data)
         {
             var json = Json.Serialize(data);
 
-            z_handleInteraction(json);
+            zpc_handleInteraction(json);
         }
 
         /// <summary>
@@ -150,27 +152,19 @@ namespace ZapicSDK
         {
             var json = Json.Serialize(param);
 
-            z_submitEventWithParams(json);
+            zpc_submitEventWithParams(json);
         }
+    }
 
-        private static ZapicPlayer DeserializePlayer(string playerJson)
+    internal static class ZapicExtensions
+    {
+        internal static ZapicPlayer ToPlayer(this ZPCUPlayer p)
         {
-            UnityEngine.Debug.Log("Deserializing " + playerJson);
-            if (playerJson == null)
+            return new ZapicPlayer
             {
-                UnityEngine.Debug.Log("Null player deserialized");
-                return null;
-            }
-
-            var dict = Json.Deserialize(playerJson) as Dictionary<string, object>;
-
-            var player = new ZapicPlayer
-            {
-                PlayerId = (string)dict["playerId"],
-                NotificationToken = (string)dict["notificationToken"],
+                PlayerId = p.id,
+                    NotificationToken = p.notificationToken
             };
-
-            return player;
         }
     }
 }

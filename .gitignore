@@ -41,12 +41,6 @@ Carthage/
 
 \.vscode/
 
-Assets/Plugins/iOS/
-
-Assets/Plugins/
-
-Assets/Plugins\.meta
-
 unity\.log
 
 ICSharpCode\.SharpZipLib\.dll

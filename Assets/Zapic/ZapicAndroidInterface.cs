@@ -26,10 +26,10 @@ namespace ZapicSDK
 
         private void StartOnUI()
         {
-            using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
+            using(var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
-                using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-                using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
+                using(var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using(var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
                 {
                     var methodId = AndroidJNI.GetStaticMethodID(
                         zapicClass.GetRawClass(),
@@ -52,9 +52,9 @@ namespace ZapicSDK
                 {
                     _authenticationHandler = new ZapicPlayerAuthenticationHandler(this);
                     var methodId = AndroidJNI.GetStaticMethodID(
-                                        zapicClass.GetRawClass(),
-                                        "setPlayerAuthenticationHandler",
-                                        "(Lcom/zapic/sdk/android/ZapicPlayerAuthenticationHandler;)V");
+                        zapicClass.GetRawClass(),
+                        "setPlayerAuthenticationHandler",
+                        "(Lcom/zapic/sdk/android/ZapicPlayerAuthenticationHandler;)V");
                     var objectArray = new object[1];
                     var argArray = AndroidJNIHelper.CreateJNIArgArray(objectArray);
                     try
@@ -72,9 +72,9 @@ namespace ZapicSDK
 
         public void ShowDefaultPage()
         {
-            using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-            using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
-            using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
+            using(var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using(var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
+            using(var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
@@ -94,12 +94,12 @@ namespace ZapicSDK
             }
         }
 
-        public void ShowPage(ZapicPages page)
+        public void ShowPage(string page)
         {
-            using (var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-            using (var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
-            using (var pageObject = new AndroidJavaObject("java.lang.String", page.ToString().ToLower()))
-            using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
+            using(var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using(var gameActivityObject = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity"))
+            using(var pageObject = new AndroidJavaObject("java.lang.String", page.ToLower()))
+            using(var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
@@ -123,7 +123,7 @@ namespace ZapicSDK
         public ZapicPlayer Player()
         {
             var playerPointer = IntPtr.Zero;
-            using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
+            using(var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
@@ -160,8 +160,8 @@ namespace ZapicSDK
         {
             var json = MiniJSON.Json.Serialize(data);
 
-            using (var parametersObject = new AndroidJavaObject("java.lang.String", json))
-            using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
+            using(var parametersObject = new AndroidJavaObject("java.lang.String", json))
+            using(var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
@@ -185,8 +185,8 @@ namespace ZapicSDK
         {
             var json = MiniJSON.Json.Serialize(param);
 
-            using (var parametersObject = new AndroidJavaObject("java.lang.String", json))
-            using (var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
+            using(var parametersObject = new AndroidJavaObject("java.lang.String", json))
+            using(var zapicClass = new AndroidJavaClass("com.zapic.sdk.android.Zapic"))
             {
                 var methodId = AndroidJNI.GetStaticMethodID(
                     zapicClass.GetRawClass(),
@@ -215,7 +215,7 @@ namespace ZapicSDK
 
             string notificationToken;
             string playerId;
-            using (var zapicPlayerClass = new AndroidJavaClass("com.zapic.sdk.android.ZapicPlayer"))
+            using(var zapicPlayerClass = new AndroidJavaClass("com.zapic.sdk.android.ZapicPlayer"))
             {
                 var methodId = AndroidJNI.GetMethodID(
                     zapicPlayerClass.GetRawClass(),
@@ -251,7 +251,7 @@ namespace ZapicSDK
             return new ZapicPlayer
             {
                 NotificationToken = notificationToken ?? string.Empty,
-                PlayerId = playerId ?? string.Empty,
+                    PlayerId = playerId ?? string.Empty,
             };
         }
 
@@ -259,8 +259,7 @@ namespace ZapicSDK
         {
             private IZapicInterface _zapicInterface;
 
-            public ZapicPlayerAuthenticationHandler(IZapicInterface zapicInterface)
-                : base("com.zapic.sdk.android.ZapicPlayerAuthenticationHandler")
+            public ZapicPlayerAuthenticationHandler(IZapicInterface zapicInterface) : base("com.zapic.sdk.android.ZapicPlayerAuthenticationHandler")
             {
                 _zapicInterface = zapicInterface;
             }

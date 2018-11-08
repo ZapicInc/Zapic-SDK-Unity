@@ -83,6 +83,15 @@ public static class Zapic
     /// <param name="page">Page to show.</param>
     public static void ShowPage(ZapicPages page)
     {
+        _interface.ShowPage(page.ToString());
+    }
+
+    /// <summary>
+    /// Shows the given Zapic page
+    /// </summary>
+    /// <param name="page">Page to show.</param>
+    public static void ShowPage(string page)
+    {
         _interface.ShowPage(page);
     }
 

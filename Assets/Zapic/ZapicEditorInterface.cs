@@ -85,7 +85,7 @@ namespace ZapicSDK
             Debug.LogFormat("Zapic:Show Default page");
         }
 
-        public void ShowPage(ZapicPages page)
+        public void ShowPage(string page)
         {
             CheckStarted();
             Debug.LogFormat("Zapic:Show {0}", page);

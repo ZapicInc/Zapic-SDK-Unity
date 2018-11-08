@@ -32,11 +32,11 @@ namespace ZapicSDK
         /// </summary>
         void ShowDefaultPage();
 
-         /// <summary>
+        /// <summary>
         /// Shows the given Zapic page
         /// </summary>
         /// <param name="page">Page to show.</param>
-        void ShowPage(ZapicPages page);
+        void ShowPage(string page);
 
         /// <summary>
         /// Gets the current players unique id.
