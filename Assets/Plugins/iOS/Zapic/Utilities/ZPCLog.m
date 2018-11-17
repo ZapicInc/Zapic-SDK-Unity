@@ -36,7 +36,6 @@
 }
 
 + (void)writeLog:(NSString *)message withSymbol:(NSString *)symbol {
-
     NSLog(@"[Zapic][%@]-%@", symbol, message);
 }
 

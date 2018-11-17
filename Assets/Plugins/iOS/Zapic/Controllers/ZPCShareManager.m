@@ -9,30 +9,16 @@
 
 - (void)share:(ZPCShareMessage *)message {
     NSString *target = message.target;
+
     UIViewController *viewController = [ZPCUtils getTopViewController];
 
     if (!target || [target isEqual:@"sheet"]) {
-        NSMutableArray *objectsToShare = [NSMutableArray array];
-
-        if (message.text) {
-            [objectsToShare addObject:message.text];
-        }
-
-        if (message.image) {
-            [objectsToShare addObject:message.image];
-        }
-
-        if (message.url) {
-            [objectsToShare addObject:message.url];
-        }
-
-        UIActivityViewController *shareController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
-
-        [viewController presentViewController:shareController animated:YES completion:nil];
-
+        [self showShareSheet:message onView:viewController];
     } else if ([target isEqual:@"sms"]) {
         if (![MFMessageComposeViewController canSendText]) {
             [ZPCLog error:@"Message services are not available."];
+            [self showShareSheet:message onView:viewController];
+            return;
         } else {
             MFMessageComposeViewController *composeVC = [[MFMessageComposeViewController alloc] init];
             composeVC.messageComposeDelegate = self;
@@ -58,6 +44,7 @@
     } else if ([target isEqual:@"email"]) {
         if (![MFMailComposeViewController canSendMail]) {
             [ZPCLog error:@"Mail services are not available."];
+            [self showShareSheet:message onView:viewController];
             return;
         } else {
             MFMailComposeViewController *composeVC = [[MFMailComposeViewController alloc] init];
@@ -76,6 +63,26 @@
             [viewController presentViewController:composeVC animated:YES completion:nil];
         }
     }
+}
+
+- (void)showShareSheet:(ZPCShareMessage *)message onView:(UIViewController *)viewController {
+    NSMutableArray *objectsToShare = [NSMutableArray array];
+
+    if (message.text) {
+        [objectsToShare addObject:message.text];
+    }
+
+    if (message.image) {
+        [objectsToShare addObject:message.image];
+    }
+
+    if (message.url) {
+        [objectsToShare addObject:message.url];
+    }
+
+    UIActivityViewController *shareController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+
+    [viewController presentViewController:shareController animated:YES completion:nil];
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller

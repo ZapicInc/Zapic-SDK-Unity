@@ -4,17 +4,16 @@
 @implementation ZPCUtils
 
 + (UIViewController *)getTopViewController {
-    return UIApplication.sharedApplication.delegate.window.rootViewController;
+    UIViewController *root = UIApplication.sharedApplication.delegate.window.rootViewController;
+
+    if (root.presentedViewController) {
+        return root.presentedViewController;
+    }
+    return root;
 }
 
 + (UIView *)getTopView {
-    UIViewController *root = [self getTopViewController];
-
-    if (root.presentedViewController) {
-        return root.presentedViewController.view;
-    }
-
-    return root.view;
+    return [self getTopViewController].view;
 }
 
 + (NSDateFormatter *)getIsoFormatter {
