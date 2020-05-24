@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ZapicButton : MonoBehaviour
 {
     private void Awake()
     {
-        var button = this.GetComponent<Button>();
-
+        var button = GetComponent<Button>();
         if (button == null)
         {
             Debug.LogWarning("ZapicButton must have a Button component");
@@ -18,13 +15,13 @@ public class ZapicButton : MonoBehaviour
         button.onClick.AddListener(ShowZapicMenu);
     }
 
+    private void ShowZapicChallengesMenu()
+    {
+        Zapic.ShowPage(ZapicPage.Challenges);
+    }
+
     private void ShowZapicMenu()
     {
         Zapic.ShowDefaultPage();
-    }
-
-    private void ShowZapicChallengesMenu()
-    {
-        Zapic.ShowPage(ZapicPages.Challenges);
     }
 }

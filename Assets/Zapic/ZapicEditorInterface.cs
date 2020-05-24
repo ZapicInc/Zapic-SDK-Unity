@@ -1,178 +1,421 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+
+using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Timers;
 using UnityEngine;
-using ZapicSDK.MiniJSON;
+
+#if NET_4_6 || NET_STANDARD_2_0
+using System.Threading;
+using System.Threading.Tasks;
+#endif
 
 namespace ZapicSDK
 {
+    /// <summary>
+    ///     An <see cref="IZapicInterface"/> that mocks the Zapic SDK. This is used when playing the app in the Unity
+    ///     editor.
+    /// </summary>
     internal sealed class ZapicEditorInterface : IZapicInterface
     {
-        /// <summary>
-        /// Flag indicating if the zapic editor warning was displayed already
-        /// </summary>
-        private bool _showedWarning = false;
+        /// <summary>The mock delay in milliseconds when calling a query method.</summary>
+        private const int QUERY_DELAY = 200;
 
-        /// <summary>
-        /// Has Zapic.Start() been called yet?
-        /// </summary>
-        private bool _started = false;
+        /// <summary>The mock delay in milliseconds when calling the <see cref="Start"/> method.</summary>
+        private const int START_DELAY = 1000;
 
-        private Action<ZapicPlayer> _loginHandler;
+        /// <summary>The list of mocked challenges.</summary>
+        private readonly ZapicChallenge[] challenges;
 
-        private Action<ZapicPlayer> _logoutHandler;
+        /// <summary>The list of mocked competitions.</summary>
+        private readonly ZapicCompetition[] competitions;
 
-        private readonly ZapicPlayer _player = new ZapicPlayer("0000000-0000-0000-0000-000000000000", "Test User", new Uri("https://randomuser.me/api/portraits/men/3.jpg"), "AAAAAAAAABBBBBBBBBCCCCCCCCC");
+        /// <summary>The mock player.</summary>
+        private readonly ZapicPlayer player;
 
-        private readonly ZapicStatistic[] _stats;
+        /// <summary>The list of mocked statistics.</summary>
+        private readonly ZapicStatistic[] statistics;
 
-        private readonly ZapicChallenge[] _challenges;
+        /// <summary>The login handler.</summary>
+        private Action<ZapicPlayer> loginHandler;
 
-        private readonly ZapicCompetition[] _competitions;
+        /// <summary>The logout handler.</summary>
+        private Action<ZapicPlayer> logoutHandler;
 
+        /// <summary>A value indicating whether <see cref="Start"/> been called.</summary>
+        private bool started;
+
+        /// <summary>Initializes a new instance of the <see cref="ZapicEditorInterface"/> class.</summary>
+        internal ZapicEditorInterface()
+        {
+            var currentTime = DateTime.UtcNow;
+
+            challenges = new[]
+            {
+                new ZapicChallenge(
+                    Guid.NewGuid().ToString("D"),
+                    "Challenge 1",
+                    "Win!",
+                    null,
+                    true,
+                    currentTime.AddHours(-10),
+                    currentTime.AddHours(5),
+                    10,
+                    ZapicChallengeStatus.Accepted,
+                    1234,
+                    "1,234",
+                    2),
+                new ZapicChallenge(
+                    Guid.NewGuid().ToString("D"),
+                    "Challenge 2",
+                    "Win!",
+                    null,
+                    false,
+                    currentTime.AddHours(-30),
+                    currentTime.AddHours(-15),
+                    10,
+                    ZapicChallengeStatus.Invited,
+                    null,
+                    null,
+                    null),
+            };
+
+            competitions = new[]
+            {
+                new ZapicCompetition(
+                    Guid.NewGuid().ToString("D"),
+                    "Competition 1",
+                    "Win!",
+                    "{\"level\":2}",
+                    true,
+                    currentTime.AddHours(-12),
+                    currentTime.AddHours(12),
+                    250,
+                    ZapicCompetitionStatus.Accepted,
+                    467,
+                    "467",
+                    null,
+                    3),
+            };
+
+            player = new ZapicPlayer(
+                Guid.NewGuid().ToString("D"),
+                "John Doe",
+                new Uri("https://randomuser.me/api/portraits/men/3.jpg"),
+                "AAAAAAAAAABBBBBBBBBBCCCCCCCCCC");
+
+            statistics = new[]
+            {
+                new ZapicStatistic(Guid.NewGuid().ToString("D"), "Stat 1", null, 1234, "1,234", 90),
+                new ZapicStatistic(Guid.NewGuid().ToString("D"), "Stat 2", null, 567.8, "567.80", 15),
+            };
+        }
+
+        /// <remarks/>
         public Action<ZapicPlayer> OnLogin
         {
             get
             {
-                return _loginHandler;
+                return loginHandler;
             }
 
             set
             {
-                Debug.LogFormat("Zapic:OnLogin was set successfully");
-                _loginHandler = value;
+                Debug.Log("Zapic: OnLogin was set");
+                loginHandler = value;
             }
         }
 
+        /// <remarks/>
         public Action<ZapicPlayer> OnLogout
         {
             get
             {
-                return _logoutHandler;
+                return logoutHandler;
             }
 
             set
             {
-                Debug.LogFormat("Zapic:OnLogout was set successfully");
-                _logoutHandler = value;
+                Debug.Log("Zapic: OnLogout was set");
+                logoutHandler = value;
             }
         }
 
-        public ZapicEditorInterface()
+        /// <remarks/>
+#if NET_4_6 || NET_STANDARD_2_0
+        [Obsolete]
+#endif
+        public void GetChallenges(Action<ZapicChallenge[], ZapicException> callback)
         {
-            _stats = new []
+            EnsureStarted();
+#if NET_4_6 || NET_STANDARD_2_0
+            Debug.LogWarning("Zapic: GetChallenges was called");
+#else
+            Debug.Log("Zapic: GetChallenges was called");
+#endif
+
+            var timer = new System.Timers.Timer(QUERY_DELAY);
+            timer.Elapsed += (sender, evt) =>
             {
-                new ZapicStatistic(Guid.NewGuid().ToString(), "Stat1", "1,234", 1234, .90, 8),
-                new ZapicStatistic(Guid.NewGuid().ToString(), "Stat2", "567.8", 567.8, .1, null),
+                timer.Stop();
+
+                try
+                {
+                    callback(challenges, null);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Zapic: An error occurred calling the GetChallenges callback");
+                    Debug.LogException(e);
+                    throw;
+                }
+
+                timer.Dispose();
             };
+            timer.Start();
+        }
 
-            _challenges = new []
+#if NET_4_6 || NET_STANDARD_2_0
+        /// <remarks/>
+        public Task<ZapicChallenge[]> GetChallengesAsync(CancellationToken cancellationToken)
+        {
+            EnsureStarted();
+            Debug.Log("Zapic: GetChallengesAsync was called");
+
+            return Task.Delay(QUERY_DELAY, cancellationToken).ContinueWith(
+                parentTask => challenges,
+                TaskContinuationOptions.ExecuteSynchronously);
+        }
+#endif
+
+        /// <remarks/>
+#if NET_4_6 || NET_STANDARD_2_0
+        [Obsolete]
+#endif
+        public void GetCompetitions(Action<ZapicCompetition[], ZapicException> callback)
+        {
+            EnsureStarted();
+#if NET_4_6 || NET_STANDARD_2_0
+            Debug.LogWarning("Zapic: GetCompetitions was called");
+#else
+            Debug.Log("Zapic: GetCompetitions was called");
+#endif
+
+            var timer = new System.Timers.Timer(QUERY_DELAY);
+            timer.Elapsed += (sender, evt) =>
             {
-                new ZapicChallenge(Guid.NewGuid().ToString(), "Challenge 1", true, "Win!", DateTime.UtcNow.AddHours(-10), DateTime.UtcNow.AddHours(5), "1,234", 1234, "level1", ZapicChallengeStatus.Accepted, 4, 15),
-                new ZapicChallenge(Guid.NewGuid().ToString(), "Challenge 2", true, "Win!", DateTime.UtcNow.AddHours(-15), DateTime.UtcNow.AddHours(15), null, null, "level1", ZapicChallengeStatus.Invited, null, null)
+                timer.Stop();
 
+                try
+                {
+                    callback(competitions, null);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Zapic: An error occurred calling the GetCompetitions callback");
+                    Debug.LogException(e);
+                    throw;
+                }
+
+                timer.Dispose();
             };
+            timer.Start();
+        }
 
-            _competitions = new []
+#if NET_4_6 || NET_STANDARD_2_0
+        /// <remarks/>
+        public Task<ZapicCompetition[]> GetCompetitionsAsync(CancellationToken cancellationToken)
+        {
+            EnsureStarted();
+            Debug.Log("Zapic: GetCompetitionsAsync was called");
+
+            return Task.Delay(QUERY_DELAY, cancellationToken).ContinueWith(
+                parentTask => competitions,
+                TaskContinuationOptions.ExecuteSynchronously);
+        }
+#endif
+
+        /// <remarks/>
+#if NET_4_6 || NET_STANDARD_2_0
+        [Obsolete]
+#endif
+        public void GetPlayer(Action<ZapicPlayer, ZapicException> callback)
+        {
+            EnsureStarted();
+#if NET_4_6 || NET_STANDARD_2_0
+            Debug.LogWarning("Zapic: GetPlayer was called");
+#else
+            Debug.Log("Zapic: GetPlayer was called");
+#endif
+
+            var timer = new System.Timers.Timer(QUERY_DELAY);
+            timer.Elapsed += (sender, evt) =>
             {
-                new ZapicCompetition(Guid.NewGuid().ToString(), "Competition 1", "Beat everyone else", "Zone2", true, DateTime.UtcNow.AddHours(-10), DateTime.UtcNow.AddHours(5), 10234, ZapicCompetitionStatus.Accepted, "467", 467, null, 3),
+                timer.Stop();
+
+                try
+                {
+                    callback(player, null);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Zapic: An error occurred calling the GetPlayer callback");
+                    Debug.LogException(e);
+                    throw;
+                }
+
+                timer.Dispose();
             };
+            timer.Start();
         }
 
-        public void Start()
+#if NET_4_6 || NET_STANDARD_2_0
+        /// <remarks/>
+        public Task<ZapicPlayer> GetPlayerAsync(CancellationToken cancellationToken)
         {
-            DisplayEditorWarning();
+            EnsureStarted();
+            Debug.Log("Zapic: GetPlayerAsync was called");
 
-            Debug.LogFormat("Zapic:Start");
+            return Task.Delay(QUERY_DELAY, cancellationToken).ContinueWith(
+                parentTask => player,
+                TaskContinuationOptions.ExecuteSynchronously);
+        }
+#endif
 
-            if (_started)
-                Debug.LogError("Zapic: Please only call Zapic.Start() once.");
+        /// <remarks/>
+#if NET_4_6 || NET_STANDARD_2_0
+        [Obsolete]
+#endif
+        public void GetStatistics(Action<ZapicStatistic[], ZapicException> callback)
+        {
+            EnsureStarted();
+#if NET_4_6 || NET_STANDARD_2_0
+            Debug.LogWarning("Zapic: GetStatistics was called");
+#else
+            Debug.Log("Zapic: GetStatistics was called");
+#endif
 
-            _started = true;
-
-            var timer = new System.Timers.Timer(1000);
-
-            timer.Elapsed += new ElapsedEventHandler((s, e) =>
+            var timer = new System.Timers.Timer(QUERY_DELAY);
+            timer.Elapsed += (sender, evt) =>
             {
-                ((System.Timers.Timer) s).Stop(); //s is the Timer
+                timer.Stop();
 
-                if (_loginHandler != null)
-                    _loginHandler(_player);
-            });
-            timer.Enabled = true;
+                try
+                {
+                    callback(statistics, null);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Zapic: An error occurred calling the GetStatistics callback");
+                    Debug.LogException(e);
+                    throw;
+                }
 
+                timer.Dispose();
+            };
+            timer.Start();
         }
 
-        public void ShowDefaultPage()
+#if NET_4_6 || NET_STANDARD_2_0
+        /// <remarks/>
+        public Task<ZapicStatistic[]> GetStatisticsAsync(CancellationToken cancellationToken)
         {
-            CheckStarted();
-            Debug.LogFormat("Zapic:Show Default page");
-        }
+            EnsureStarted();
+            Debug.Log("Zapic: GetStatisticsAsync was called");
 
-        public void ShowPage(ZapicPages page)
+            return Task.Delay(QUERY_DELAY, cancellationToken).ContinueWith(
+                parentTask => statistics,
+                TaskContinuationOptions.ExecuteSynchronously);
+        }
+#endif
+
+        /// <remarks/>
+        public void HandleInteraction(Dictionary<string, object> parameters)
         {
-            CheckStarted();
-            Debug.LogFormat("Zapic:Show {0}", page);
+            EnsureStarted();
+            var json = MiniJSON.Json.Serialize(parameters);
+            Debug.LogFormat("Zapic: HandleInteraction was called, {0}", json);
         }
 
-        public void SubmitEvent(Dictionary<string, object> param)
-        {
-            CheckStarted();
-            var json = MiniJSON.Json.Serialize(param);
-            Debug.LogFormat("Zapic: SubmitEvent: {0}", json);
-        }
-
+        /// <remarks/>
+        [Obsolete]
         public ZapicPlayer Player()
         {
-            CheckStarted();
-            Debug.LogFormat("Zapic:GetPlayer");
-            return _player;
+            EnsureStarted();
+            Debug.LogWarning("Zapic: Player was called");
+
+            return player;
         }
 
-        private void DisplayEditorWarning()
+        /// <remarks/>
+        public void ShowDefaultPage()
         {
-            //If the warning has already been shown, show the error.
-            if (_showedWarning)
+            EnsureStarted();
+            Debug.Log("Zapic: ShowDefaultPage was called");
+        }
+
+        /// <remarks/>
+        public void ShowPage(ZapicPage page)
+        {
+            EnsureStarted();
+            Debug.LogFormat("Zapic: ShowPage was called, {0}", page.ToString());
+        }
+
+        /// <remarks/>
+        public void Start()
+        {
+            if (started)
+            {
+                Debug.LogWarning("Zapic: You should only call Zapic.Start once");
                 return;
+            }
+            else
+            {
+                started = true;
+                Debug.Log("Zapic: You will only see log messages and mock data when running in the Unity editor");
+            }
 
-            _showedWarning = true;
+            var timer = new System.Timers.Timer(START_DELAY);
+            timer.Elapsed += (sender, evt) =>
+            {
+                timer.Stop();
 
-            Debug.Log("Zapic only works on mobile devices. You will only see log messages when running in the editor.");
+                try
+                {
+                    var callback = loginHandler;
+                    if (callback != null)
+                    {
+                        loginHandler(player);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Zapic: An error occurred calling the OnLogin callback");
+                    Debug.LogException(e);
+                    throw;
+                }
+
+                timer.Dispose();
+            };
+            timer.Start();
         }
 
-        private void CheckStarted()
+        /// <remarks/>
+        public void SubmitEvent(Dictionary<string, object> parameters)
         {
-            //If it was started, don't do anything else
-            if (_started)
-                return;
-
-            Debug.LogError("Zapic: Please ensure that Zapic.Start() is called before any other Zapic methods.");
+            EnsureStarted();
+            var json = MiniJSON.Json.Serialize(parameters);
+            Debug.LogFormat("Zapic: SubmitEvent was called, {0}", json);
         }
 
-        public void HandleInteraction(Dictionary<string, object> data)
+        /// <remarks/>
+        private void EnsureStarted()
         {
-            Debug.LogFormat("Zapic:HandleInteraction");
-        }
-
-        public void GetCompetitions(Action<ZapicCompetition[], ZapicError> callback)
-        {
-            callback(_competitions, null);
-        }
-
-        public void GetStatistics(Action<ZapicStatistic[], ZapicError> callback)
-        {
-            callback(_stats, null);
-        }
-
-        public void GetChallenges(Action<ZapicChallenge[], ZapicError> callback)
-        {
-            callback(_challenges, null);
-        }
-
-        public void GetPlayer(Action<ZapicPlayer, ZapicError> callback)
-        {
-            callback(_player, null);
+            if (!started)
+            {
+                Debug.LogError("Zapic: You must call Zapic.Start once before calling other methods");
+            }
         }
     }
 }
+
+#endif

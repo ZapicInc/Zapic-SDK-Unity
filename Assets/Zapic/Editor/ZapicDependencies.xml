@@ -1,5 +1,5 @@
 <dependencies>
   <androidPackages>
-    <androidPackage spec="com.android.support:support-core-utils:[26.0.0, 27.2.0)" />
+    <androidPackage spec="com.android.support:support-core-utils:[26.0.0, 28.1.0)" />
   </androidPackages>
 </dependencies>
